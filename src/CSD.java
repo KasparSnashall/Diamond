@@ -42,10 +42,11 @@ import java.util.Random;
 
 
 public class CSD {
-
+	  
     public static void main(String[] args) throws ScriptException, IOException{
     	Display display = new Display();
         Shell shell = new Shell(display);
+        shell.setText("My Powder Diffraction toolkit");
 
         // create a new GridLayout with two columns
         // of different size
@@ -75,87 +76,15 @@ public class CSD {
         cTabItem5.setText("Search");
         
         
-        // composite allows me to use more then one item in my tab folder
-        Composite composite = new Composite(folder, SWT.NONE);
-        GridData gridData = new GridData(SWT.FILL, SWT.FILL, true, false); // must figure these variables out
-        gridData.horizontalSpan = 2;
-        composite.setLayoutData(gridData);
-        composite.setLayout(new GridLayout(2, false)); // two columns
-        // addition of new items
-        new Label(composite, SWT.NONE).setText("Write view");
-        // make buttons in a row
         
-        
-        Button b = new Button(composite,SWT.PUSH);
-        b.setText("numbers.py");
-        b.addSelectionListener(new SelectionListener(){
-        	
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				System.out.println("called");
-				
-				
-				
-				
-				try{
-					 int number1 = 10;
-					 int number2 = 32;
-					 Process p = Runtime.getRuntime().exec("python python_code/numbers.py "+number1+" "+number2);
-					 BufferedReader in = new BufferedReader(new InputStreamReader(p.getInputStream()));
-					 int ret = new Integer(in.readLine()).intValue();
-					 System.out.println("value is : "+ret);
-				 }catch(Exception z){System.out.println(z);}
-				
-			}
-
-			@Override
-			public void widgetDefaultSelected(SelectionEvent e) {
-				// TODO Auto-generated method stub}
-			}});
-        
-        new Button(composite, SWT.BUTTON4).setText("button 4");
-        
-        
-        Button browse = new Button(shell, SWT.PUSH);
-		browse.setText("Browse...");
-		gridData = new GridData(GridData.FILL, GridData.CENTER, true, false);
-		gridData.horizontalIndent = 5;
-		browse.setLayoutData(gridData);
-		
-		// adding a browse and return function
-		browse.addSelectionListener(new SelectionAdapter() {
-			public void widgetSelected(SelectionEvent event) {
-				String fileName = new FileDialog(shell).open();
-				if (fileName != null) {
-					Image dogImage = new Image(display, fileName);
-				}
-			}
-		});
-		
-		// trying to run a simple python program
-		
-		
-		/*
-		b.addSelectionListener(new SelectionAdapter() {
-			public void widgetSelected(SelectionEvent event) {
-				
-				
-			}});
-		*/
-
-		// try running py4j
-		
-        
-        
-        
-        
-        
-        
-        // set control
-        cTabItem2.setControl(composite);
+        // add in the readtab (this will allow reading of data)
+        ReadTab myreadtab = new ReadTab();
+        cTabItem1.setControl(myreadtab.create(folder,shell,display));
         
         // pack and load shell
+        
         shell.pack();
+        shell.setSize(500, 500);
         shell.open();
         while (!shell.isDisposed()) {
           if (!display.readAndDispatch()) {

@@ -4,5 +4,4 @@ Bundle-Name: CSD
 Bundle-SymbolicName: CSD
 Bundle-Version: 1.0.0.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
-Require-Bundle: org.eclipse.swt;bundle-version="3.103.2",
- org.python.pydev.jython;bundle-version="3.9.2"
+Require-Bundle: org.eclipse.swt;bundle-version="3.103.2"
