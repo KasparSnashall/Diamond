@@ -2,11 +2,55 @@ import numpy as np
 import os
 
 class Loader:
-    # this class contains all loading functions
-    # mainly used in unit tests
+    """
+    Loader Class doc string
+    ###########################
+    Class designed to handle all loading of files or data sets
+    
+    Attributes
+    -----------------
+    None
+    
+    Methods
+    -------------------
+    
+    __init__()
+    -------------
+    1 argument self
+    pass
+    
+    load_data()
+    -----------
+    4 arguments self,data1[list or str], data2[list or str], colnum = 3 [int column to be used]
+    calls other functions to make data list
+    or if all data is list
+    returns data1,data2
+    
+    load_hkl_data()
+    ------------------
+    2 arguments self, str filepath
+    loads a hkl file using numpy
+    loads third column
+    returns list
+    
+    load_data_mac()
+    ----------------
+    2 arguments self, str filepath
+    loads file
+    skips row 1
+    returns array
+    
+    load_data_ntreor()
+    -------------------
+    stub same as load_data_mac()
+    to be replaced
+    
+    
+    
+    """
     
     def __init__(self):
-        print "Loader"
+        pass
         
     
     def load_data(self,data1,data2,colnum = 3):
