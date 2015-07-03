@@ -85,9 +85,6 @@ public class CSD {
         
         
         // pack and load shell
-        
-       
-        
         shell.pack();
         shell.setSize(500, 500);
         shell.open();

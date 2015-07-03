@@ -14,7 +14,9 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.python.core.PyInstance;
+import org.python.core.PyInteger;
 import org.python.core.PyObject;
+import org.python.core.PyString;
 
 public class ReadTab{
 	
@@ -37,18 +39,28 @@ public class ReadTab{
         final Text text1 = new Text(composite2, SWT.MULTI | SWT.V_SCROLL | SWT.WRAP);
         text1.setSize(300, 400);
         
+        
+        
+        interpreter ie = new interpreter(); // call my interpreter
+		ie.execfile("python_code/hello.py"); // init my filer
+		PyInstance hello = ie.createClass("Hello", "None"); // invoke my class as a pyobject
+		
+		
+		// numbers.py button function
         b.addSelectionListener(new SelectionListener(){
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				System.out.println("called");
+				System.out.println("called"); // check
 				try{
-					interpreter ie = new interpreter();
-					ie.execfile("python_code/hello.py");
-					PyInstance hello = ie.createClass("Hello", "None");
-					PyObject text = hello.invoke("run");
-					String newtext = (String)text.__tojava__(String.class);
-					text1.append(newtext);
-				 }catch(Exception z){System.out.println(z);}	
+					PyObject text = hello.invoke("run"); // calls the run function
+					String newtext = (String)text.__tojava__(String.class); // string
+					text1.append(newtext+"\n"); // print
+					PyObject x = new PyInteger(5); // make a int
+					hello.invoke("foo",x); // call the foo method
+					PyObject vars = hello.invoke("gety"); // get the y variable
+					Integer newertext = (Integer)vars.__tojava__(Integer.class); // make to int
+					text1.append(Integer.toString(newertext)+"\n"); // print
+					}catch(Exception z){text1.append(z.getMessage());}	
 			}
 
 			@Override
@@ -56,9 +68,10 @@ public class ReadTab{
 				// TODO Auto-generated method stub}
 			}});
         
-        
+        // add in a browse function
         Button browse = new Button(composite, SWT.PUSH);
 		browse.setText("Browse...");
+		
 		gridData = new GridData(GridData.FILL, GridData.CENTER, true, false);
 		gridData.horizontalIndent = 5;
 		browse.setLayoutData(gridData);
