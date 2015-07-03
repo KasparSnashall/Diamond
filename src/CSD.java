@@ -35,10 +35,11 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.swt.widgets.Text;
 
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+
+import org.python.core.PyInstance;
 
 
 public class CSD {
@@ -67,13 +68,13 @@ public class CSD {
         CTabItem cTabItem1 = new CTabItem(folder, SWT.NONE);
         cTabItem1.setText("Read");
         CTabItem cTabItem2 = new CTabItem(folder, SWT.NONE);
-        cTabItem2.setText("Write");
+        cTabItem2.setText("Convert");
         CTabItem cTabItem3 = new CTabItem(folder, SWT.NONE);
-        cTabItem3.setText("Plot");
+        cTabItem3.setText("Search");
         CTabItem cTabItem4 = new CTabItem(folder, SWT.NONE);
-        cTabItem4.setText("Index");
+        cTabItem4.setText("Compare");
         CTabItem cTabItem5 = new CTabItem(folder, SWT.NONE);
-        cTabItem5.setText("Search");
+        cTabItem5.setText("Index");
         
         
         
@@ -81,7 +82,11 @@ public class CSD {
         ReadTab myreadtab = new ReadTab();
         cTabItem1.setControl(myreadtab.create(folder,shell,display));
         
+        
+        
         // pack and load shell
+        
+       
         
         shell.pack();
         shell.setSize(500, 500);

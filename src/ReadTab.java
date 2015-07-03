@@ -1,14 +1,8 @@
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.util.concurrent.Callable;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
-import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
-import org.eclipse.swt.events.ShellEvent;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -19,7 +13,8 @@ import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
-
+import org.python.core.PyInstance;
+import org.python.core.PyObject;
 
 public class ReadTab{
 	
@@ -47,13 +42,12 @@ public class ReadTab{
 			public void widgetSelected(SelectionEvent e) {
 				System.out.println("called");
 				try{
-					 int number1 = 10;
-					 int number2 = 32;
-					 Process p = Runtime.getRuntime().exec("python python_code/numbers.py "+number1+" "+number2);
-					 BufferedReader in = new BufferedReader(new InputStreamReader(p.getInputStream()));
-					 int ret = new Integer(in.readLine()).intValue();
-					 System.out.println("value is : "+ret);
-					 text1.append("output   \n");
+					interpreter ie = new interpreter();
+					ie.execfile("python_code/hello.py");
+					PyInstance hello = ie.createClass("Hello", "None");
+					PyObject text = hello.invoke("run");
+					String newtext = (String)text.__tojava__(String.class);
+					text1.append(newtext);
 				 }catch(Exception z){System.out.println(z);}	
 			}
 
