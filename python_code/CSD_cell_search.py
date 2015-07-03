@@ -3,6 +3,35 @@ from collections import namedtuple
 
 
 class CSD_cell_search:
+    """
+    CSD_cell_search Class doc string
+    ##################################
+    
+    CSDCS is designed to enable the user to search for a crystal[or a list of crystals] via
+    cell parameters a,b,c alpha,beta,gamma 
+    
+    Attributes
+    ------------------
+    angles [list length 3]
+    cell_lengths [list length 3]
+    lattice_centring [string see ccdc docs for allowed strings]
+    
+    
+    Methods
+    ------------------
+    
+    __init__()
+    ------------
+    takes 3 arguments self,angles,lengths
+    
+    search()
+    ------------
+    uses all atr
+    converts lists to named tuples
+    calls ccdc ReducedCellSearch using tuples
+    returns tuple(h.identifier, h.crystal.cell_lengths, h.crystal.cell_angles, h.crystal.lattice_centring)
+ 
+    """
     
     def __init__(self,angles,lengths):
         self.angles = angles
