@@ -42,7 +42,7 @@ public class ReadTab{
         
         
         interpreter ie = new interpreter(); // call my interpreter
-		ie.execfile("python_code/hello.py"); // init my filer
+		ie.execfile("python_code/hello.py"); // init my file
 		PyInstance hello = ie.createClass("Hello", "None"); // invoke my class as a pyobject
 		
 		

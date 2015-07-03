@@ -1,6 +1,7 @@
 from Loader import Loader
 import numpy as np
 np.set_printoptions(suppress = True)
+
 class Macmaille:
     
     dict_list = {'Symmetry codes':None,'W': None,'Nind':None,'Pmin':None, 'Pmax':None, 'Vmin':None, 'Vmax':None, 'Rmin':None, 'Rmax':None, 'Rmaxref':None,'Spar':None, 'Sang':None,'Ntests':None, 'Nruns':None}
