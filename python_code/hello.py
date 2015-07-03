@@ -3,6 +3,13 @@ class Hello:
     
     def __init__(self, gui):
         self.__gui = gui
+        self.y = 0
  
     def run(self):
-        return 'Hello world!'
+        return 'My Number'
+    
+    def foo(self,x):
+        self.y += x
+        
+    def gety(self):
+        return self.y

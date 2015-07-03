@@ -3,6 +3,68 @@ from Loader import Loader
 load = Loader()
 
 class Comparator:
+    """
+    Comparator Class doc string
+    ############################
+    This class compares two data sets usually lists but arguments such as 
+    filenames (eg .hkl) may be passed to it.
+    
+    attributes
+    ----------------------
+    self.data1 = data1 # first known data set
+    self.data2 = data2 # second data set
+    self.weights = []   # creates weights 
+    self.tolerance = 5 # the tolerance used in binary
+    self.data_range = None # range for data in form start,stop
+    self.optimise_steps = -0.5,0.5,300  #-x,x, number of steps
+    self.optimise = False # optimise option
+    
+    
+    
+    methods:
+    ###########################
+    
+    __init__()
+    --------------------
+    takes- 3 arguments self, data1 [str or list], data2 [str or list]
+    
+    binary()
+    ---------------------
+    
+    uses data1[] and data1[],compares lists using a binary method with a percentage tolerance 
+    of first data set (self.tol)
+    has optimise (True/False) shifts data to left or right via least squares method for optimal fit
+    
+    returns percentage match (float)
+    
+    fraction()
+    ----------------------
+    uses data1[] and data2[], compares lists using fractional method
+    returns average percentage
+    
+    both()
+    ---------------------
+    uses output from binary() and fraction() 
+    returns average
+    
+    scale()
+    --------------------
+    uses data1[],percent[],self.weights[[]]
+    applies numpy weighted average
+    returns weighted average
+    
+    get_range()
+    -------------------
+    
+    
+    compare()
+    --------------------
+    main function used to call fraction, binary and both 
+    
+    
+    
+    
+    """
     
     def __init__(self,data1,data2): 
         #print "Comparator"
