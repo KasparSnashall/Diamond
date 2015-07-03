@@ -3,7 +3,47 @@ from ccdc.descriptors import PowderPattern
 import numpy as np
 
 class CSD_powder:
-    # loads items, lists and performs calculations related to powder diffraction patterns
+    """
+    CSD_powder class
+    #######################
+    this class calculates d_spacing, intensities and two theta for a specific crystal
+    
+    Attributes
+    -------------
+    
+    entry [ccdc entry reader method]
+    crystal_name str the name of a crystal of form 'AABHTZ'
+    
+    Methods
+    ---------------
+    
+    __init__()
+    ---------------
+    takes 2 arguments self,name [str]
+    sets crystal name
+    
+    load_d_space()
+    ---------------
+    uses name atr
+    calls ccdc PowderPattern class
+    calculates d_spacing using braggs law
+    
+    returns d_space[list of d_spacing], intensities[list of peak intensities]
+    
+    load_intensities()
+    ------------------
+    uses name atr
+    calls ccdc PowderPattern class
+    returns list[intensities]
+    
+    load_two_theta()
+    -------------------
+    uses name atr
+    calls ccdc PowderPattern class
+    returns list[two theta angles]
+    
+    
+    """
     def __init__(self,name):
         ""
         self.entry = EntryReader('CSD')
