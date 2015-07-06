@@ -38,6 +38,19 @@ class CSD_cell_search:
         self.cell_lengths = lengths
         self.lattice_centring = 'primitive'
     
+    def get_angles(self):
+        return self.angles
+    def set_angles(self,angles):
+        self.angles = angles
+    def get_cell_lengths(self):
+        return self.cell_lengths
+    def set_cell_lengths(self,lengths):
+        self.cell_lengths = lengths
+    def get_lattice_centring(self):
+        return self.lattice_centring
+    def set_lattice_centring(self,centring):
+        self.lattice_centring = centring
+    
     def search(self):
         # searches the csd data base for a crystal with known parameters returns best result
         cellA = namedtuple('CellAngles', ['alpha', 'beta', 'gamma']) # create a named tuple for ccdc module
