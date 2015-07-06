@@ -2,7 +2,14 @@ from Loader import Loader
 import numpy as np
 
 class Ntreor:
-
+    """Class Ntreor
+    ##################
+    
+    This class is designed to read out put,write input (.dat files) and call the ntreor exe file.
+    
+    
+    """
+    
     title = "ntreor_test"
     #The list of all possible variables
     standard_dict = {'KH':4,'KK':4,'KL':4,'KS':6,'THH':4,'THL':4,'THK':4,'THS':4,'OH1':2,'OK1':2,'OL1':2,'OS1':3,
@@ -13,11 +20,12 @@ class Ntreor:
                      'CHOICE':0,'DENS':0,'EDENS':0,'MOLW':0,'TRIC':0}
 
     def __init__(self,data):
-        print "Ntreor program"
+        """calls the class, data is an array with 20 intensity elements, keywords is a blank dict"""
         self.data = data
         self.keywords = {}
         
     def add_keywords(self,key,value):
+        """function to add keywords, 2 arguments key a string must be in self.standard_dict, and value usually an int or float"""
         if key not in self.standard_dict.iterkeys():
             print'Error Ntreor entered keyword not in standard dict see get_keywords() for accepted list with usual values \n or _keylist_() for full descriptions'
             raise ValueError
@@ -25,11 +33,12 @@ class Ntreor:
             self.keywords[key] = value
     
     def get_keywords(self):
+        """function to return the current keys and values of dict keywords"""
         print self.standard_dict
         return self.standard_dict
         
     def read_output(self,file_name):
-        # reads the imp output file of ntreor
+        """function to read a .imp ouputfile of the ntreor program takes a filepath (string) to the .imp file"""
         with open(file_name,'r') as f:
             lines = f.readlines()
             linenum = 0
@@ -78,9 +87,9 @@ class Ntreor:
         return value_list,errors_list
 
     def write_input(self):
-        ""
+        """function to9 write a .dat input file for the ntreor programme uses filepath as an argument"""
         data1 = self.data[0:20] # select first 20 elements only, I must test this!
-        with open('/home/sfz19839/DAWN_stable/comparison/testdata/'+self.title +'.dat','w') as f:
+        with open('python_code/'+self.title +'.dat','w') as f:
             f.write(self.title +'\n') # set title
             for i in data1:
                 f.write(str(i)+'\n') # add in data
@@ -97,7 +106,7 @@ class Ntreor:
      
     def _keylist_(self):
         # prints the key list for ntreor this is extensive
-        with open('/home/sfz19839/DAWN_stable/comparison/documentation/Ntreor_keywords.txt','r') as f:
+        with open('/scratch/workspace_git/Diamond/python_code/documentation/Ntreor_keywords.txt','r') as f:
             print f.read()
             f.close()
 

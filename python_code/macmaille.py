@@ -45,7 +45,7 @@ class Macmaille:
         data = Loader().load_data_mac(self.data)
         data1 = data[0:20,(3,4)] # get column 3,4 # select first 20 rows
         # next write dat file named title.dat
-        with open('/home/sfz19839/DAWN_stable/comparison/testdata/'+self.title+'.dat','w') as f:
+        with open('/scratch/workspace_git/Diamond/python_code/'+self.title+'.dat','w') as f:
             f.write(self.title +'\n') # set title
             options = str(self.wavelength) +" "+str(self.zeropoint)+" "+ str(self.ngrid)+'\n'
             f.write(options) # write in file options

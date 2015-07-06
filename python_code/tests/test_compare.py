@@ -1,5 +1,5 @@
-from comparator import Comparator
-from Loader import Loader
+from python_code.comparator import Comparator
+from python_code.Loader import Loader
 
 class test:
     #Class to test comparator.py
@@ -7,7 +7,7 @@ class test:
         # runs all unit tests 
         self.load_data_test()
         # loads test data
-        self.data1,self.data3 = Loader().load_data('/home/sfz19839/DAWN_stable/comparison/testdata/test1.hkl','/home/sfz19839/DAWN_stable/comparison/testdata/test3.hkl')
+        self.data1,self.data3 = Loader().load_data('python_code/testdata/test1.hkl','python_code/testdata/test3.hkl')
         self.binary_test1()
         self.binary_test2()
         self.optimise_test()
@@ -19,7 +19,7 @@ class test:
     def load_data_test(self):
         #test load test data, try loading data
         load = Loader()
-        set1,set2 = load.load_data('/home/sfz19839/DAWN_stable/comparison/testdata/test1.hkl','/home/sfz19839/DAWN_stable/comparison/testdata/test3.hkl')
+        set1,set2 = load.load_data('python_code/testdata/test1.hkl','python_code/testdata/test3.hkl')
         assert set1 != []
         assert set2 != []
 

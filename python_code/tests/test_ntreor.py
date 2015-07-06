@@ -1,22 +1,22 @@
-from ntreor import Ntreor
-from Loader import Loader
+from python_code.ntreor import Ntreor
+from python_code.Loader import Loader
 
 class test:
     
     def read_test(self):
-        data = Loader().load_data_ntreor('/home/sfz19839/DAWN_stable/comparison/testdata/test1.hkl')
+        data = Loader().load_data_ntreor('python_code/testdata/test1.hkl')
         nt = Ntreor(data)
-        output = nt.read_output('/home/sfz19839/DAWN_stable/comparison/testdata/treor90_output.imp')
+        output = nt.read_output('python_code/testdata/treor90_output.imp')
         assert output != None
     
     def write_test(self):
-        data = Loader().load_data_ntreor('/home/sfz19839/DAWN_stable/comparison/testdata/test1.hkl')
+        data = Loader().load_data_ntreor('python_code/testdata/test1.hkl')
         nt = Ntreor(data[:,4])
         nt.title = 'ntreor_test'
         nt.add_keywords('CHOICE', 2)
         nt.write_input()
-        with open('/home/sfz19839/DAWN_stable/comparison/testdata/ntreor_test.dat','r') as f:
-            with open('/home/sfz19839/DAWN_stable/comparison/testdata/ntreor_input_test.txt','r') as g:
+        with open('python_code/testdata/ntreor_test.dat','r') as f:
+            with open('python_code/testdata/ntreor_input_test.txt','r') as g:
                 glines = g.readlines()
                 flines = f.readlines()
                 for l1,l2 in zip(glines,flines):
@@ -25,11 +25,11 @@ class test:
             f.close()
 
     def call_test(self):
-        nt = Ntreor('/home/sfz19839/DAWN_stable/comparison/testdata/test1.hkl')
+        nt = Ntreor('python_code/testdata/test1.hkl')
         nt.call()
     
     def help_test(self):
-        nt = Ntreor('/home/sfz19839/DAWN_stable/comparison/testdata/test1.hkl')
+        nt = Ntreor('python_code/testdata/test1.hkl')
         helper = nt._keylist_()
         assert helper == None
         
