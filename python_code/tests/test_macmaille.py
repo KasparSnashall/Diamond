@@ -27,7 +27,7 @@ class test:
             f.close()
     
     def write_test2(self):
-        # tests the write function with parameters added
+        # tests the write function with parameters added 
         mac = Macmaille('python_code/testdata/test1.hkl',1.541800, 0.0000, 0,'mac_test2')
         key_chain = {'Symmetry codes':None,'W': None,'Nind':None,'Pmin':None, 'Pmax':None, 'Vmin':None, 'Vmax':None, 'Rmin':None, 'Rmax':None, 'Rmaxref':None,'Spar':None, 'Sang':None,'Ntests':None, 'Nruns':None}
         for k in key_chain.iterkeys():
