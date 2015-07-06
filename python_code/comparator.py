@@ -76,7 +76,36 @@ class Comparator:
         self.optimise_steps = -0.5,0.5,300  #-x,x, number of steps
         self.optimise = False
         
+    def get_weights(self):
+        return self.weights
+        
+    def set_weights(self,value):
+        self.weights.append(value)
+        
+    def get_tolerance(self):
+        return self.tolerance
+    
+    def set_tolerance(self,value):
+        self.tolerance = value
 
+    def get_data_range(self):
+        return self.data_range
+
+    def set_data_range(self,value):
+        self.data_range = value
+  
+    def get_optimise_steps(self):
+        return self.optimise_steps
+
+    def set_optimise_steps(self,*value):
+        self.optimise_steps = value
+
+    def get_optimise(self):
+        return self.optimise
+
+    def set_optimise(self,value):
+        self.optimise = value
+        
     def binary(self):
         #compare with binary method
         set1, set2 = self.data1,self.data2
@@ -210,4 +239,8 @@ class Comparator:
             return self.fraction()
             
         else:
-            return self.both()
+            return self.both()    
+        
+    
+        
+    

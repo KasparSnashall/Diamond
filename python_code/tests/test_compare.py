@@ -25,8 +25,8 @@ class test:
 
     def binary_test1(self):
         #test that compares two identical sets
-        boby = Comparator(self.data1,self.data1)
-        results = boby.compare(option = "b")
+        bob = Comparator(self.data1,self.data1)
+        results = bob.compare(option = "b")
         print results
         assert results == 100
 
@@ -55,21 +55,20 @@ class test:
     
     def weight_test(self):
         bob = Comparator(self.data1,self.data3)
-        bob.weights.append([0,10,3])
-        bob.weights.append([20,25,5])
-        print bob.weights
-        assert bob.weights == [[0,10,3],[20,25,5]]
+        bob.set_weights([0,10,3])
+        bob.set_weights([20,25,5])
+        assert bob.get_weights() == [[0,10,3],[20,25,5]]
         assert bob.compare() != None
         assert bob.compare(option = "f") != None
         assert bob.compare(option = "b") != None
     
     def optimise_test(self):
         bob = Comparator(self.data1,self.data3)
-        bob.tolerance = 5
-        bob.steprange = -0.6,0.6,400
-        bob.optimise = True
+        bob.set_tolerance(5)
+        bob.set_optimise_steps(-0.6,0.6,400)
+        bob.set_optimise(True)
         opt_value = bob.compare('b')
-        bob.optimise = False
+        bob.set_optimise(False)
         bad_value = bob.compare('b')
         assert opt_value == 77
         assert bad_value == 1
