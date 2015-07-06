@@ -107,8 +107,18 @@ class Ntreor:
             f.close
 
     def call(self):
-        print "to be added once compile complete"
-        return None
+        
+        from subprocess import Popen,PIPE
+        #subprocess.call(["/scratch/cmpr/exe/ntreor","-l"])
+        proc = Popen(["/scratch/cmpr/exe/ntreor"],stdin=PIPE,stdout=PIPE)
+        proc.stdin.write('N\n') # first line is always N
+        proc.stdin.write('ntreor_test.dat\n') # name of input file
+        proc.stdin.write('testdata/new1\n') # output file
+        proc.stdin.write('testdata/new2\n')# condensed output file
+        proc.stdin.write('testdata/new3\n')# short output file
+        proc.stdin.write('0\n') # theta shift
+        proc.stdin.write('N\n') # asks to stop after one? always N
+        
      
     def _keylist_(self):
         # prints the key list for ntreor this is extensive
@@ -116,4 +126,6 @@ class Ntreor:
             print f.read()
             f.close()
 
-    
+if __name__ == "__main__":
+    bob = Ntreor(2)
+    bob.call()
