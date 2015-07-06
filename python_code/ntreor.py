@@ -24,7 +24,9 @@ class Ntreor:
         self.data = data
         self.keywords = {}
         
-    def add_keywords(self,key,value):
+    
+        
+    def set_keywords(self,key,value):
         """function to add keywords, 2 arguments key a string must be in self.standard_dict, and value usually an int or float"""
         if key not in self.standard_dict.iterkeys():
             print'Error Ntreor entered keyword not in standard dict see get_keywords() for accepted list with usual values \n or _keylist_() for full descriptions'
@@ -34,8 +36,12 @@ class Ntreor:
     
     def get_keywords(self):
         """function to return the current keys and values of dict keywords"""
-        print self.standard_dict
         return self.standard_dict
+    
+    def get_data(self):
+        return self.data
+    def set_data(self,data):
+        self.data = data
         
     def read_output(self,file_name):
         """function to read a .imp ouputfile of the ntreor program takes a filepath (string) to the .imp file"""

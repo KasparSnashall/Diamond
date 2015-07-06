@@ -13,7 +13,7 @@ class test:
         data = Loader().load_data_ntreor('python_code/testdata/test1.hkl')
         nt = Ntreor(data[:,4])
         nt.title = 'ntreor_test'
-        nt.add_keywords('CHOICE', 2)
+        nt.set_keywords('CHOICE', 2)
         nt.write_input('python_code/testdata/')
         with open('python_code/testdata/ntreor_test.dat','r') as f:
             with open('python_code/testdata/ntreor_input_test.txt','r') as g:
