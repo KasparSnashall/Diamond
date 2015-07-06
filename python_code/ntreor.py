@@ -101,7 +101,7 @@ class Ntreor:
                 f.write(str(i)+'\n') # add in data
             f.write('\n') # new line
             for j,k in self.keywords.iteritems():
-                f.write(j.upper()+'='+str(k)+'\n') # add keywords in uppercase
+                f.write(j.upper()+'='+str(k)+',\n') # add keywords in uppercase
             f.write('END*'+'\n') # add end statement
             f.write('0.00') # required for some code if not needed ignored
             f.close
@@ -112,12 +112,13 @@ class Ntreor:
         #subprocess.call(["/scratch/cmpr/exe/ntreor","-l"])
         proc = Popen(["/scratch/cmpr/exe/ntreor"],stdin=PIPE,stdout=PIPE)
         proc.stdin.write('N\n') # first line is always N
-        proc.stdin.write('ntreor_test.dat\n') # name of input file
-        proc.stdin.write('testdata/new1\n') # output file
-        proc.stdin.write('testdata/new2\n')# condensed output file
-        proc.stdin.write('testdata/new3\n')# short output file
+        proc.stdin.write('testdata/ntreor_test.dat\n') # name of input file
+        proc.stdin.write('testdata/ntreor1.imp\n') # output file
+        proc.stdin.write('testdata/ntreor1.con\n')# condensed output file
+        proc.stdin.write('testdata/ntreorshort.imp\n')# short output file
         proc.stdin.write('0\n') # theta shift
         proc.stdin.write('N\n') # asks to stop after one? always N
+        return 1
         
      
     def _keylist_(self):
@@ -126,6 +127,4 @@ class Ntreor:
             print f.read()
             f.close()
 
-if __name__ == "__main__":
-    bob = Ntreor(2)
-    bob.call()
+Ntreor(2).call()

@@ -11,7 +11,7 @@ class test:
     
     def write_test(self):
         data = Loader().load_data_ntreor('python_code/testdata/test1.hkl')
-        nt = Ntreor(data[:,4])
+        nt = Ntreor(data[:,3])
         nt.title = 'ntreor_test'
         nt.set_keywords('CHOICE', 2)
         nt.write_input('python_code/testdata/')
@@ -26,7 +26,7 @@ class test:
 
     def call_test(self):
         nt = Ntreor('python_code/testdata/test1.hkl')
-        nt.call()
+        assert nt.call() == 1
     
     def help_test(self):
         nt = Ntreor('python_code/testdata/test1.hkl')

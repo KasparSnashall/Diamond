@@ -69,9 +69,12 @@ class Loader:
                     # find file type if not known then raise type error
                     if '.hkl' in d:
                         new_data.append(self.load_hkl_data(d))
+                    else:
+                        print "data file type not known, try making it into another type?"
+                        raise TypeError
                 else:
-                    print "data file type not known, try making it into list?"
-                    raise TypeError
+                    print "No such file exists"
+                    raise ValueError
         print "data loaded successfully"
         print new_data
         return new_data[0],new_data[1]
