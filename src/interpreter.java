@@ -1,10 +1,7 @@
 import org.python.core.PyInstance;
 import org.python.util.PythonInterpreter;
- 
- 
 public class interpreter
 {
- 
    PythonInterpreter interpreter = null;
  
  
