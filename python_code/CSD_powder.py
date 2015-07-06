@@ -49,6 +49,12 @@ class CSD_powder:
         self.entry = EntryReader('CSD')
         self.crystal_name = name
         
+    def get_crystal_name(self):
+        return self.crystal_name
+    
+    def set_crystal_name(self,value):
+        self.crystal_name = value
+    
     def load_d_space(self):
         # creates a d_space list with intensities as a second option
         crystal = self.entry.crystal(self.crystal_name)
