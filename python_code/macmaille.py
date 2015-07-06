@@ -40,16 +40,15 @@ class Macmaille:
                 else:
                     continue
     
-    def writeinput(self):
+    def writeinput(self,filepath):
         #writes the input .dat file
         data = Loader().load_data_mac(self.data)
         data1 = data[0:20,(3,4)] # get column 3,4 # select first 20 rows
         # next write dat file named title.dat
-        with open('/scratch/workspace_git/Diamond/python_code/'+self.title+'.dat','w') as f:
+        with open(filepath + self.title+'.dat','w') as f:
             f.write(self.title +'\n') # set title
             options = str(self.wavelength) +" "+str(self.zeropoint)+" "+ str(self.ngrid)+'\n'
-            f.write(options) # write in file options
-            
+            f.write(options) # write in file options        
             if self.keywordflag == 1:
                 # check none of the items are None else return error
                 self.check_keywords()
@@ -59,8 +58,7 @@ class Macmaille:
                 f.write(d['W']+' '+d['Nind']+"\n")
                 f.write(d['Pmin']+" " +d['Pmax']+" "+ d['Vmin'] +" "+d['Vmax']+" "+d['Rmin']+" "+d['Rmax']+" "+d['Rmaxref']+"\n")
                 f.write(d['Spar']+" "+d['Sang']+"\n")
-                f.write(d['Ntests']+" "+d['Nruns']+"\n")
-                
+                f.write(d['Ntests']+" "+d['Nruns']+"\n")            
             f.write("!!! \n") # blank line signals beginning of data
             for x in data1:
                 a = '%f' % x[0] # read values as floats with no scientific notation

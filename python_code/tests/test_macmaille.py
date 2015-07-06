@@ -16,7 +16,7 @@ class test:
     def write_test(self):
         #Tests the full write functions of write input
         mac = Macmaille('python_code/testdata/test1.hkl',1.541800, 0.0000, 0,'mac_test')
-        mac.writeinput()
+        mac.writeinput('python_code/testdata/')
         with open('python_code/testdata/'+mac.title+'.dat','r') as f:
             with open('python_code/testdata/mac_input_test.txt','r') as g:
                 flines  = f.readlines()
@@ -32,7 +32,7 @@ class test:
         key_chain = {'Symmetry codes':None,'W': None,'Nind':None,'Pmin':None, 'Pmax':None, 'Vmin':None, 'Vmax':None, 'Rmin':None, 'Rmax':None, 'Rmaxref':None,'Spar':None, 'Sang':None,'Ntests':None, 'Nruns':None}
         for k in key_chain.iterkeys():
             mac.add_keywords(k, 1)
-        mac.writeinput()
+        mac.writeinput('python_code/testdata/')
         with open('python_code/testdata/mac_input_test2.txt','r') as f:
             with open('python_code/testdata/mac_test2.dat', 'r') as g:
                 flines = f.readlines()

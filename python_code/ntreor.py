@@ -86,10 +86,10 @@ class Ntreor:
         
         return value_list,errors_list
 
-    def write_input(self):
+    def write_input(self,filepath):
         """function to9 write a .dat input file for the ntreor programme uses filepath as an argument"""
         data1 = self.data[0:20] # select first 20 elements only, I must test this!
-        with open('python_code/'+self.title +'.dat','w') as f:
+        with open(filepath + self.title +'.dat','w') as f:
             f.write(self.title +'\n') # set title
             for i in data1:
                 f.write(str(i)+'\n') # add in data
