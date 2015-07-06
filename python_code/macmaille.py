@@ -1,5 +1,6 @@
 from Loader import Loader
 import numpy as np
+from iotbx.shelx.parsers import wavelength_parser
 np.set_printoptions(suppress = True)
 
 class Macmaille:
@@ -21,8 +22,9 @@ class Macmaille:
         self.title = title
         self.keywordflag = 0
         
+        
     
-    def add_keywords(self,key,value):
+    def set_keywords(self,key,value):
         # add keywords to dict
         self.dict_list[str(key)] = str(value)
         self.keywordflag = 1
@@ -31,6 +33,24 @@ class Macmaille:
         #returns the keywords
         return self.dict_list
     
+    def set_wavelength(self,wavlength):
+        self.wavelength = wavelength
+        
+    def get_wavelength(self):
+        return self.wavelength
+    def set_zeropoint(self,zeropoint):
+        self.zeropoint = zeropoint
+    def get_zeropoint(self):
+        return self.zeropoint
+    def set_ngrid(self,ngrid):
+        self.ngrid = ngrid
+    def get_ngrid(self):
+        return self.ngrid
+    def set_title(self,title):
+        self.title = title
+    def get_title(self):
+        return self.title
+
     def check_keywords(self):
         # checks values are not None
         for k,v in self.dict_list.iteritems():
