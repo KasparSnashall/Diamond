@@ -1,6 +1,6 @@
 from Loader import Loader
 import numpy as np
-
+from subprocess import Popen,PIPE
 class Ntreor:
     """Class Ntreor
     ##################
@@ -10,7 +10,7 @@ class Ntreor:
     
     """
     
-    title = "ntreor_test"
+
     #The list of all possible variables
     standard_dict = {'KH':4,'KK':4,'KL':4,'KS':6,'THH':4,'THL':4,'THK':4,'THS':4,'OH1':2,'OK1':2,'OL1':2,'OS1':3,
                      'OH2':2,'OK2':2,'OL2':2,'OS2':4,'OH3':2,'OK3':2,'OL3':2,'OS3':4,'MH1':2,'MK1':2,'ML1':2,
@@ -19,10 +19,12 @@ class Ntreor:
                      'NIX':1,'IDIV':1,'WAVE':1.5405981,'VOL':2000,'CEM':25,'D1':0.002,'SSQTL':0.05,'D2':0.0004,
                      'CHOICE':0,'DENS':0,'EDENS':0,'MOLW':0,'TRIC':0}
 
-    def __init__(self,data):
+    def __init__(self,data,title,filepath):
         """calls the class, data is an array with 20 intensity elements, keywords is a blank dict"""
         self.data = data
         self.keywords = {}
+        self.title = title
+        self.filepath = filepath
         
     
         
@@ -43,9 +45,9 @@ class Ntreor:
     def set_data(self,data):
         self.data = data
         
-    def read_output(self,file_name):
+    def read_output(self):
         """function to read a .imp ouputfile of the ntreor program takes a filepath (string) to the .imp file"""
-        with open(file_name,'r') as f:
+        with open(self.filepath+self.title+'.imp','r') as f:
             lines = f.readlines()
             linenum = 0
             list1 = []
@@ -92,10 +94,10 @@ class Ntreor:
         
         return value_list,errors_list
 
-    def write_input(self,filepath):
+    def write_input(self):
         """function to9 write a .dat input file for the ntreor programme uses filepath as an argument"""
         data1 = self.data[0:20] # select first 20 elements only, I must test this!
-        with open(filepath + self.title +'.dat','w') as f:
+        with open(self.filepath + self.title +'.dat','w') as f:
             f.write(self.title +'\n') # set title
             for i in data1:
                 f.write(str(i)+'\n') # add in data
@@ -108,17 +110,27 @@ class Ntreor:
 
     def call(self):
         
-        from subprocess import Popen,PIPE
-        #subprocess.call(["/scratch/cmpr/exe/ntreor","-l"])
-        proc = Popen(["/scratch/cmpr/exe/ntreor"],stdin=PIPE,stdout=PIPE)
+      
+        proc = Popen('/scratch/workspace_git/Diamond/python_code/ntreor',stdin=PIPE,stdout=PIPE) # calls ntreor needs full path usually
         proc.stdin.write('N\n') # first line is always N
-        proc.stdin.write('testdata/ntreor_test.dat\n') # name of input file
-        proc.stdin.write('testdata/ntreor1.imp\n') # output file
-        proc.stdin.write('testdata/ntreor1.con\n')# condensed output file
-        proc.stdin.write('testdata/ntreorshort.imp\n')# short output file
+        proc.stdin.write(self.filepath+self.title+'.dat\n') # name of input file
+        proc.stdin.write(self.filepath+self.title+'.imp\n') # output file
+        proc.stdin.write(self.filepath+self.title+'.con\n')# condensed output file
+        proc.stdin.write(self.filepath+self.title+'.short\n')# short output file
         proc.stdin.write('0\n') # theta shift
         proc.stdin.write('N\n') # asks to stop after one? always N
-        return 1
+        import os
+        for file in os.listdir(os.getcwd()):
+            if "fort" in file:
+                    print file
+                    with open(file) as f:
+                        lines = f.readlines()
+                        for line in lines:
+                            print line
+                        f.close()
+                    os.remove(file)
+                    raise ValueError
+        return 0
         
      
     def _keylist_(self):
@@ -126,5 +138,3 @@ class Ntreor:
         with open('/scratch/workspace_git/Diamond/python_code/documentation/Ntreor_keywords.txt','r') as f:
             print f.read()
             f.close()
-
-Ntreor(2).call()
