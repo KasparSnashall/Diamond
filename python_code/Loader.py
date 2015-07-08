@@ -1,5 +1,9 @@
-import numpy as np
+import sys
+import math
+import scisoftpy as dnp
 import os
+#import scisoft
+#import numpy as np
 
 class Loader:
     """
@@ -49,10 +53,9 @@ class Loader:
     
     """
     
-    def __init__(self):
-        pass
+    def __init__(self,data):
+        self.data = data
         
-    
     def load_data(self,data1,data2,colnum = 3):
         # load in all data
         print "Loading data"
@@ -80,13 +83,27 @@ class Loader:
         return new_data[0],new_data[1]
         
         
-    def load_hkl_data(self,data):
-        # loads a hkl file colnum  is 3,4 for d_space,intensity respectively 
-        d1 =  np.loadtxt(data,skiprows = 1)
-        d1 = d1[:,3] # returns a column of data or returns an array
-        print d1
-        return d1
+    def load_hkl_data(self):
+        # loads a hkl file colnum  is 3,4 for d_space,intensity respectively
+        if os.path.isfile(self.data):
+            print self.data
+            d1 =  dnp.io.load(self.data,format='text')
+            d1 = d1[0]
+            
+            d1 = d1[:,3] # returns a column of data or returns an array
+            d1 = d1[1:]
+            d1 = [float(i) for i in d1]
+            return d1
+      
         
+        else:
+            return "This is not a file"
+    def trythis(self,myarray):
+        print myarray
+        
+    
+    
+    
     def load_data_mac(self,data):
         d =  np.loadtxt(data,skiprows = 1)
         return d
@@ -95,6 +112,5 @@ class Loader:
         #will add more to this function?
         d = np.loadtxt(data, skiprows = 1)
         return d
-        
-if __name__ == "__main__":
-    Loader()
+if __name__ == '__main__':
+    Loader('data').load_hkl_data()    

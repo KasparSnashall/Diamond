@@ -1,49 +1,22 @@
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.StringWriter;
 
-import javax.script.ScriptContext;
-import javax.script.ScriptEngine;
-import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
-import javax.script.SimpleScriptContext;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
-import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.FileDialog;
-import org.eclipse.swt.widgets.Group;
-import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.Spinner;
-import org.eclipse.swt.widgets.Text;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-
-import org.python.core.PyInstance;
 
 
 public class CSD {
-	  
+	
     public static void main(String[] args) throws ScriptException, IOException{
     	Display display = new Display();
         Shell shell = new Shell(display);
@@ -66,37 +39,44 @@ public class CSD {
         // add tabs to the layout
         // make these more descriptive
         CTabItem cTabItem1 = new CTabItem(folder, SWT.NONE);
-        cTabItem1.setText("Read");
+        cTabItem1.setText("Load");
         CTabItem cTabItem2 = new CTabItem(folder, SWT.NONE);
-        cTabItem2.setText("Convert");
+        cTabItem2.setText("Find peaks");
         CTabItem cTabItem3 = new CTabItem(folder, SWT.NONE);
-        cTabItem3.setText("Search");
+        cTabItem3.setText("Index");
         CTabItem cTabItem4 = new CTabItem(folder, SWT.NONE);
         cTabItem4.setText("Compare");
         CTabItem cTabItem5 = new CTabItem(folder, SWT.NONE);
-        cTabItem5.setText("Index");
+        cTabItem5.setText("Search");
         
         
+        // in all cases I am making a composite controller to each tab
+        // add in the load tab (this will allow reading of data)
+        LoadTab myloadtab = new LoadTab();
+        cTabItem1.setControl(myloadtab.create(folder,shell,display));
+        //add in the find peaks tab
+        FindPeaks findtab =  new FindPeaks();
+        cTabItem2.setControl(findtab.create(folder,shell,display));
+        //add in index tab
+        IndexTab indextab = new IndexTab();
+        cTabItem3.setControl(indextab.create(folder,shell,display));
         
-        // add in the readtab (this will allow reading of data)
-        ReadTab myreadtab = new ReadTab();
-        cTabItem1.setControl(myreadtab.create(folder,shell,display));
+        CompareTab comparetab = new CompareTab();
+        cTabItem4.setControl(comparetab.create(folder,shell,display));
         
-        
+        SearchTab searchtab = new SearchTab();
+        cTabItem5.setControl(searchtab.create(folder,shell,display));
         
         // pack and load shell
         shell.pack();
-        shell.setSize(500, 500);
+        shell.setSize(400, 600);
         shell.open();
         while (!shell.isDisposed()) {
           if (!display.readAndDispatch()) {
             display.sleep();
           }
         }
-        display.dispose();
+        display.dispose();}
     }
-}
+ 
 
-class mybutton{
-	
-}

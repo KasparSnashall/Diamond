@@ -9,7 +9,6 @@ public class interpreter
    {
       PythonInterpreter.initialize(System.getProperties(),
                                    System.getProperties(), new String[0]);
- 
       this.interpreter = new PythonInterpreter();
    }
  
