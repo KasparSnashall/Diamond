@@ -1,16 +1,10 @@
 import java.io.IOException;
-
 import javax.script.ScriptException;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabItem;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
@@ -34,7 +28,6 @@ public class CSD {
         CTabFolder folder = new CTabFolder(shell, SWT.TOP); // create a tab set
         GridData data = new GridData(SWT.FILL, SWT.FILL, true, true,2, 1);
         folder.setLayoutData(data);
-        
         
         // add tabs to the layout
         // make these more descriptive
@@ -68,8 +61,9 @@ public class CSD {
         cTabItem5.setControl(searchtab.create(folder,shell,display));
         
         // pack and load shell
+        folder.pack();
         shell.pack();
-        shell.setSize(400, 600);
+        shell.setSize(600, 700);
         shell.open();
         while (!shell.isDisposed()) {
           if (!display.readAndDispatch()) {
