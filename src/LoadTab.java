@@ -1,16 +1,9 @@
 import java.io.File;
-import java.lang.reflect.Array;
-import java.util.Arrays;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
-import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.layout.FormAttachment;
-import org.eclipse.swt.layout.FormData;
-import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -20,13 +13,15 @@ import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
-import org.python.core.PyArray;
 import org.python.core.PyInstance;
-import org.python.core.PyInteger;
 import org.python.core.PyObject;
-import org.python.core.PyString;
+
 
 public class LoadTab{
+	Boolean myrange = false;
+	public static PyObject data;
+	
+	
 	
 	public Composite create(CTabFolder folder,Shell shell,Display display){// composite allows me to use more then one item in my tab folder
         Composite composite = new Composite(folder, SWT.NONE);
@@ -42,39 +37,30 @@ public class LoadTab{
         GridData griddata = new GridData(GridData.CENTER);
 		griddata.horizontalSpan = 3;
 		readview.setLayoutData(griddata);
-		
-		// centre grid data
-
-        
-		
-		
-		// sample name row
+		// first label smaple name
 		Label samplename = new Label(composite, SWT.NONE);
 		samplename.setText("Sample Name:");
-		
-		final Text sampletext = new Text(composite, SWT.BORDER);
-		sampletext.setText("name");
+		// textbox
+		final Text sampletext = new Text(composite,SWT.BORDER);
+		sampletext.setText(" ");
 		GridData griddata2 = new GridData(150,15);
 		griddata2.horizontalSpan = 2;
 		sampletext.setLayoutData(griddata2);
 		
 		
-		// adding in the loading buttons
-		
+		// label filepath
 		Label nameLabel = new Label(composite, SWT.NONE);
 		nameLabel.setText("File path:");
-		
+		// filepath textbox
 		final Text filetext = new Text(composite, SWT.BORDER);
-		filetext.setText("...");
+		filetext.setText(" ");
 		GridData griddata3 = new GridData(150,15);
 		filetext.setLayoutData(griddata3);
-		
-		
-		
+		// browse buutton
 		Button browse = new Button(composite, SWT.PUSH);
+		browse.setAlignment(SWT.LEFT);
 		browse.setText("Browse...");
-		
-		
+		// browse function
 		browse.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent event) {
 				String filepath = new FileDialog(shell).open();
@@ -91,88 +77,91 @@ public class LoadTab{
 			}
 		});
 		
-		
-        
-        // trying to run a simple python program
-        
-		
+        // check box
 		final Button rangebox = new Button(composite, SWT.CHECK);
 		rangebox.setText("Range");
+		
+		final Text lower = new Text(composite,SWT.BORDER);
+		lower.setText("lower");
+		lower.setEnabled(false);
+		// upper and lower limit text boxes
+		final Text upper = new Text(composite, SWT.BORDER);
+		upper.setText("upper");
+		upper.setEnabled(false);
+		// rangebox function
 		rangebox.addSelectionListener(new SelectionAdapter()
 		{
 		    @Override
 		    public void widgetSelected(SelectionEvent e)
 		    {
 		        if (rangebox.getSelection())
-		            System.out.println("here");
+		            {myrange = true;
+		            upper.setEnabled(true);
+		            lower.setEnabled(true);
+		            }
 		        else
-		        	;
+		        	{
+		        	myrange = false;
+		        	upper.setEnabled(false);
+		        	lower.setEnabled(false);
+		        	}
 		    }
 		});
-		
-		final Text upper = new Text(composite, SWT.BORDER);
-		upper.setText("upper");
-		final Text lower = new Text(composite,SWT.BORDER);
-		lower.setText("lower");
-		
-        
-        Button b = new Button(composite,SWT.PUSH);
-        b.setText("Load");
+		// load button
+        Button load = new Button(composite,SWT.PUSH);
+        load.setText("Load");
         GridData griddata4 = new GridData(300,30);
         griddata4.horizontalSpan = 3;
         griddata4.minimumWidth = 40;
-        b.setLayoutData(griddata4);
+        load.setLayoutData(griddata4);
         
-        
-        
-        
-        final Text text1 = new Text(composite, SWT.MULTI | SWT.V_SCROLL | SWT.WRAP);
-        GridData griddata5 = new GridData(300,300);
+        // output textbox
+        final Text textboxtext = new Text(composite, SWT.MULTI | SWT.V_SCROLL | SWT.WRAP);
+        GridData griddata5 = new GridData(SWT.FILL, SWT.FILL, true, true);
         griddata5.horizontalSpan = 3;
-        griddata5.grabExcessHorizontalSpace = true;
-        griddata5.grabExcessVerticalSpace = true;
-        text1.setLayoutData(griddata5);
+        textboxtext.setLayoutData(griddata5);
         
-        
-        
-        
+        interpreter ie = new interpreter(); // call my interpreter
+		ie.execfile("python_code/Loader.py"); // my file
+		
 		// load button function
-       
-        b.addSelectionListener(new SelectionListener(){
+        load.addSelectionListener(new SelectionListener(){
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				System.out.println("called"); // check
 				try{
 					
-					interpreter ie = new interpreter(); // call my interpreter
-					ie.execfile("python_code/Loader.py"); // init my file
+					textboxtext.setText(""); // clear text
 					String myfilepath = filetext.getText(); // get filepath
-					String newstring = "'"+myfilepath+"'"; // make sure python knows its a string
-					PyInstance Loader = ie.createClass("Loader",newstring); // invoke my class as a pyobject
-					PyObject array = Loader.invoke("load_hkl_data"); // calls the run function
-					PyObject newarray = Loader.invoke("trythis", array);
-					array.toString();
-					//Array newarray = (Array)array.__tojava__(Array.class); // string
-					text1.append(array+"\n"); // print
+					String finalfilepath = "'"+myfilepath+"'"; // add filepath string to opts
+					String myrangestring = "'"+myrange.toString()+"'"; // bool myrange to string 
+					String top = "'"+upper.getText()+"'"; // upper limit
+					String bottom = "'"+lower.getText()+"'"; // lowerlimit
+					String opts = finalfilepath+","+myrangestring+","+top+","+bottom; // collect the options
+					PyInstance Loader = ie.createClass("Loader",opts);// invoke my class as a pyobject
+					data = Loader.invoke("load"); // calls the run function
+					data.toString(); // always returns pyobject so can be written to string
+					textboxtext.append(sampletext.getText()+"\n"); // get the name of the data print to textbox
+					textboxtext.append(data+"\n"); // print the data
+					new IndexTab().setMydata(data);
 					
 					
-					
-					
-					
-					}catch(Exception z){text1.append(z.getMessage());}	
+					}catch(Exception z){
+						textboxtext.append("system error please retry with different values");}	
 			}
 
 			@Override
 			public void widgetDefaultSelected(SelectionEvent e) {
 				// TODO Auto-generated method stub}
 			}});
-        
-        // add in a browse function
-       
-		
-		
-		
-		
+        	
         return composite;
 		}
+	
+	public static PyObject data_getter(){ 
+		// getter for the data
+		return data;
+		
+	}
+	
 	}
