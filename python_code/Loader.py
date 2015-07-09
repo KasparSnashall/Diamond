@@ -25,6 +25,7 @@ class Loader:
     
     load_data()
     -----------
+    used only in tests (to be removed)
     4 arguments self,data1[list or str], data2[list or str], colnum = 3 [int column to be used]
     calls other functions to make data list
     or if all data is list
@@ -33,28 +34,22 @@ class Loader:
     load_hkl_data()
     ------------------
     2 arguments self, str filepath
-    loads a hkl file using numpy
+    loads a hkl file using scisoftpy
     loads third column
     returns list
     
-    load_data_mac()
-    ----------------
-    2 arguments self, str filepath
-    loads file
-    skips row 1
-    returns array
-    
-    load_data_ntreor()
-    -------------------
-    stub same as load_data_mac()
-    to be replaced
-    
-    
-    
+    load()
+    -------------
+    main function
+    input string filename
+    output error or switch to appropriate loading mechanism
     """
     
-    def __init__(self,data):
-        self.data = data
+    def __init__(self,data,myrange,upper,lower):#,upper,lower):
+        self.data = data #filepath
+        self.myrange = myrange # range boolean string
+        self.upper = upper # upper limit
+        self.lower = lower # lower limit
         
     def load_data(self,data1,data2,colnum = 3):
         # load in all data
@@ -85,32 +80,44 @@ class Loader:
         
     def load_hkl_data(self):
         # loads a hkl file colnum  is 3,4 for d_space,intensity respectively
-        if os.path.isfile(self.data):
-            print self.data
-            d1 =  dnp.io.load(self.data,format='text')
-            d1 = d1[0]
+        d1 =  dnp.io.load(self.data,format='text')
+        d1 = d1[0] # get the data array from dnp array
+        d1 = d1[:,4] # return the 4th column intensity
+        d1 = d1[1:] # skip the header, del or pop is not allowed
+        d1 = [float(i) for i in d1] # make floats
+        if self.myrange == True:
+            d1 = d1[int(self.lower):int(self.upper)] # as its hkl you want these as ints
             
-            d1 = d1[:,3] # returns a column of data or returns an array
-            d1 = d1[1:]
-            d1 = [float(i) for i in d1]
-            return d1
-      
-        
+        return d1
+
+    
+    def load(self):
+        if self.myrange == 'false':
+            self.myrange = False
+        elif self.myrange == 'true':
+            self.myrange = True
+            try:
+                self.upper = float(self.upper)
+                self.lower = float(self.lower)
+                if self.upper < self.lower:
+                    return "Upper limit must be greater then lower limit"
+
+            except:
+                return "Range must be numbers"
+            
+        if os.path.exists(self.data):
+            # check if path is there
+            # find file type if not known then raise type error
+            if '.hkl' in self.data:
+                return self.load_hkl_data()
+            if '.xye' in self.data:
+                pass
+            if '.gsas' in self.data:
+                pass
+            else:
+                return "Data file type "+os.path.splitext(self.data)[1]+" not known, try a different type or ensure it has correct file extension."""
         else:
-            return "This is not a file"
-    def trythis(self,myarray):
-        print myarray
-        
+            return "No such file exists"
+            
     
-    
-    
-    def load_data_mac(self,data):
-        d =  np.loadtxt(data,skiprows = 1)
-        return d
-    
-    def load_data_ntreor(self,data):
-        #will add more to this function?
-        d = np.loadtxt(data, skiprows = 1)
-        return d
-if __name__ == '__main__':
-    Loader('data').load_hkl_data()    
+
