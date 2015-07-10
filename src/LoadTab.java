@@ -114,7 +114,7 @@ public class LoadTab{
         griddata4.horizontalSpan = 3;
         griddata4.minimumWidth = 40;
         load.setLayoutData(griddata4);
-        
+        new Label(composite,SWT.NONE).setText("Output");;
         // output textbox
         final Text textboxtext = new Text(composite, SWT.MULTI | SWT.V_SCROLL | SWT.WRAP);
         GridData griddata5 = new GridData(SWT.FILL, SWT.FILL, true, true);
