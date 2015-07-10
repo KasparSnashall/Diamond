@@ -96,58 +96,48 @@ public class IndexTab {
 		});
         
         
-        interpreter ie = new interpreter(); // call my interpreter
-		ie.execfile("python_code/mydict.py"); // my file
-		PyInstance Loader = ie.createClass("MyDict","");// invoke my class as a pyobject
-		PyObject mydict = Loader.invoke("get_dict"); // calls the run function
-        String mydicti = mydict.toString();// remove the brackets
-        String[] pairs = mydicti.split(",");
-        Map<String, String> myMap = new HashMap<String, String>();
-        for (int i=0;i<pairs.length;i++) {
-            String pair = pairs[i];
-            String[] keyValue = pair.split(":");
-            System.out.print(keyValue[0]);
-            myMap.put(keyValue[0], keyValue[1]);
-        }
-        
-        
-        
-        
-        
         
         CTabFolder indexfolder = new CTabFolder(composite, SWT.TOP); // create a tab set
-        GridData data = new GridData(SWT.FILL, SWT.FILL, true, true,3, 1);
-        indexfolder.setLayoutData(data);
+        griddata = new GridData(SWT.FILL, SWT.FILL, true, true,2, 1);
+        //griddata.horizontalSpan = 2;
+        indexfolder.setLayoutData(griddata);
         
         
         CTabItem cTabItem1 = new CTabItem(indexfolder, SWT.BORDER);
         cTabItem1.setText("Ntreor");
-        
-        Table table = new Table(indexfolder, SWT.NONE);
-        String[] titles = {" ", "C", "!", "Description", "Resource", "In Folder", "Location"};
-    	for (int i=0; i<titles.length; i++) {
-    		TableColumn column = new TableColumn (table, SWT.NONE);
-    		column.setText (titles [i]);
-    	}	
-    	int count = 12;
-    	for (int i=0; i<count; i++) {
-    		TableItem item = new TableItem (table, SWT.NONE);
-    		item.setText (0, "x");
-    		item.setText (1, "y");
-    		item.setText (2, "!");
-    		item.setText (3, "this stuff behaves the way I expect");
-    		item.setText (4, "almost everywhere");
-    		item.setText (5, "some.folder");
-    		item.setText (6, "line " + i + " in nowhere");
-    	}
-    	for (int i=0; i<titles.length; i++) {
-    		table.getColumn (i).pack ();
-    	}	
+        Properties_Widget customwidget = new Properties_Widget();
+        Table table = customwidget.create(indexfolder);
         cTabItem1.setControl(table);
         
+        Button addvariable = new Button(composite,SWT.NONE);
+        addvariable.setText("add variables");
+        
+        // way to return values
+        
+        addvariable.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent event) {
+				for (int loopIndex = 0; loopIndex < table.getItems().length; loopIndex++) {
+			  	      TableItem myitem = table.getItem(loopIndex);
+			  	      
+			  	    
+			  	      if (myitem.getChecked() == true){
+			  	    	
+				  	  System.out.print(myitem.getText(1));
+			  	      }
+			  	      else{
+			  	    	  
+			  	      }
+			  	      
+			  }
+			}
+		}); 
+        Button run = new Button(composite, SWT.NONE);
+        run.setText("Run");
+    	
         
         
-        
+        CTabItem cTabItem2 = new CTabItem(indexfolder, SWT.BORDER);
+        cTabItem2.setText("McMy");
         
         return composite;
         }
