@@ -1,5 +1,5 @@
-from Loader import Loader
-import numpy as np
+#from Loader import Loader
+#import numpy as np
 from subprocess import Popen,PIPE
 class Ntreor:
     """Class Ntreor
@@ -15,7 +15,7 @@ class Ntreor:
     standard_dict = {'KH':4,'KK':4,'KL':4,'KS':6,'THH':4,'THL':4,'THK':4,'THS':4,'OH1':2,'OK1':2,'OL1':2,'OS1':3,
                      'OH2':2,'OK2':2,'OL2':2,'OS2':4,'OH3':2,'OK3':2,'OL3':2,'OS3':4,'MH1':2,'MK1':2,'ML1':2,
                      'MS1':2,'MH2':2,'MK2':2,'ML2':2,'MS2':3,'MH3':2,'MK3':2,'ML3':2,'MS3':2,'MH4':2,'MK4':2,'ML4':2,'MS4':2,
-                     'MONOSET':0,'MONOGRAM':1,'MONO':0,'SHORT':1,'USE':19,'IQ':'USE-3','LIST':0,'SELECT':0,'MERIT':10,
+                     'MONOSET':0,'MONOGRAM':1,'MONO':0,'SHORT':1,'USE':19,'IQ':16,'LIST':0,'SELECT':0,'MERIT':10,
                      'NIX':1,'IDIV':1,'WAVE':1.5405981,'VOL':2000,'CEM':25,'D1':0.002,'SSQTL':0.05,'D2':0.0004,
                      'CHOICE':0,'DENS':0,'EDENS':0,'MOLW':0,'TRIC':0}
 
