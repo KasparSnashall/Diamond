@@ -30,15 +30,23 @@ class Ntreor:
         
     def set_keywords(self,key,value):
         """function to add keywords, 2 arguments key a string must be in self.standard_dict, and value usually an int or float"""
+        key = key.replace(" ","") # remove spaces added by java
         if key not in self.standard_dict.iterkeys():
             print'Error Ntreor entered keyword not in standard dict see get_keywords() for accepted list with usual values \n or _keylist_() for full descriptions'
-            raise ValueError
         else:
             self.keywords[key] = value
+    def reset_keywords(self):
+        """resets the keywords for next run"""
+        self.keywords = {}
     
     def get_keywords(self):
+        return self.keywords
+    
+    def get_standard_dict(self):
         """function to return the current keys and values of dict keywords"""
         return self.standard_dict
+    
+    
     
     def get_data(self):
         return self.data

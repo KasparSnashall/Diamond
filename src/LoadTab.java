@@ -154,7 +154,7 @@ public class LoadTab{
 			public void widgetDefaultSelected(SelectionEvent e) {
 				// TODO Auto-generated method stub}
 			}});
-        	
+        composite.pack();
         return composite;
 		}
 	
