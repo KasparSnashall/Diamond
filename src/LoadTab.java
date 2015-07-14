@@ -20,6 +20,7 @@ import org.python.core.PyObject;
 public class LoadTab{
 	Boolean myrange = false;
 	public static PyObject data;
+	public static String filepath;
 	
 	
 	
@@ -37,7 +38,7 @@ public class LoadTab{
         GridData griddata = new GridData(GridData.CENTER);
 		griddata.horizontalSpan = 3;
 		readview.setLayoutData(griddata);
-		// first label smaple name
+		// first label sample name
 		Label samplename = new Label(composite, SWT.NONE);
 		samplename.setText("Sample Name:");
 		// textbox
@@ -133,6 +134,7 @@ public class LoadTab{
 					
 					textboxtext.setText(""); // clear text
 					String myfilepath = filetext.getText(); // get filepath
+					filepath = myfilepath; // set the general filepath
 					String finalfilepath = "'"+myfilepath+"'"; // add filepath string to opts
 					String myrangestring = "'"+myrange.toString()+"'"; // bool myrange to string 
 					String top = "'"+upper.getText()+"'"; // upper limit
@@ -161,6 +163,10 @@ public class LoadTab{
 	public static PyObject data_getter(){ 
 		// getter for the data
 		return data;
+		
+	}
+	public static String get_filepath(){
+		return filepath;
 		
 	}
 	

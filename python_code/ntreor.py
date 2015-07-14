@@ -1,6 +1,5 @@
-#from Loader import Loader
-#import numpy as np
 from subprocess import Popen,PIPE
+import os
 class Ntreor:
     """Class Ntreor
     ##################
@@ -19,15 +18,10 @@ class Ntreor:
                      'NIX':1,'IDIV':1,'WAVE':1.5405981,'VOL':2000,'CEM':25,'D1':0.002,'SSQTL':0.05,'D2':0.0004,
                      'CHOICE':0,'DENS':0,'EDENS':0,'MOLW':0,'TRIC':0}
 
-    def __init__(self,data,title,filepath):
+    def __init__(self):
         """calls the class, data is an array with 20 intensity elements, keywords is a blank dict"""
-        self.data = data
         self.keywords = {}
-        self.title = title
-        self.filepath = filepath
-        
-    
-        
+           
     def set_keywords(self,key,value):
         """function to add keywords, 2 arguments key a string must be in self.standard_dict, and value usually an int or float"""
         key = key.replace(" ","") # remove spaces added by java
@@ -35,6 +29,7 @@ class Ntreor:
             print'Error Ntreor entered keyword not in standard dict see get_keywords() for accepted list with usual values \n or _keylist_() for full descriptions'
         else:
             self.keywords[key] = value
+            
     def reset_keywords(self):
         """resets the keywords for next run"""
         self.keywords = {}
@@ -46,12 +41,20 @@ class Ntreor:
         """function to return the current keys and values of dict keywords"""
         return self.standard_dict
     
-    
-    
     def get_data(self):
         return self.data
+    
     def set_data(self,data):
         self.data = data
+        
+    def set_filepath(self,filepath):
+        self.filepath = filepath
+        
+    def set_title(self,title):
+        self.title= title
+        
+    def get_ntreor_path(self):
+        return "/scratch/workspace_git/Diamond/python_code"
         
     def read_output(self):
         """function to read a .imp ouputfile of the ntreor program takes a filepath (string) to the .imp file"""
@@ -116,10 +119,10 @@ class Ntreor:
             f.write('0.00') # required for some code if not needed ignored
             f.close
 
-    def call(self):
-        
-      
+    def run(self):
+        os.chdir("/scratch/workspace_git/Diamond/python_code")
         proc = Popen('/scratch/workspace_git/Diamond/python_code/ntreor',stdin=PIPE,stdout=PIPE) # calls ntreor needs full path usually
+        print self.filepath
         proc.stdin.write('N\n') # first line is always N
         proc.stdin.write(self.filepath+self.title+'.dat\n') # name of input file
         proc.stdin.write(self.filepath+self.title+'.imp\n') # output file
@@ -127,7 +130,8 @@ class Ntreor:
         proc.stdin.write(self.filepath+self.title+'.short\n')# short output file
         proc.stdin.write('0\n') # theta shift
         proc.stdin.write('N\n') # asks to stop after one? always N
-        import os
+        
+       
         for file in os.listdir(os.getcwd()):
             if "fort" in file:
                     print file
@@ -138,7 +142,7 @@ class Ntreor:
                         f.close()
                     os.remove(file)
                     raise ValueError
-        return 0
+        return "Complete"
         
      
     def _keylist_(self):

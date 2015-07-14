@@ -17,7 +17,6 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
-
 import org.python.core.PyObject;
 import org.python.core.PyString;
 
@@ -25,13 +24,16 @@ import org.python.core.PyString;
 
 public class Properties_Widget {
 	
-	public static PyObject MyClass; 
+	public static PyObject MyClass;
+	public static String myname = "";
+	public static String myfilepath = "";
 	
-	public Table create(CTabFolder indexfolder){
+	public Table create(CTabFolder indexfolder, String filepath, String classname, String options){
 		
 		Display display = Display.getCurrent();
 		Color grey = display.getSystemColor(SWT.COLOR_GRAY);
-
+		myname = classname;
+		myfilepath = filepath;
 		
 		
 		Table table = new Table(indexfolder, SWT.CHECK | SWT.MULTI | SWT.V_SCROLL); // table to be returned
@@ -43,8 +45,9 @@ public class Properties_Widget {
 		table.setLayoutData(griddata);
 		
 		interpreter ie = new interpreter(); // call my interpreter
-		ie.execfile("python_code/ntreor.py"); // my file
-		MyClass = ie.createClass("Ntreor","'data','title','filepath'");// invoke my class as a pyobject
+		ie.execfile(myfilepath); // my file
+		MyClass = ie.createClass(myname,options);// invoke my class as a pyobject
+		
 		PyObject mydict = MyClass.invoke("get_standard_dict"); // calls the run function
         String mydicti = mydict.toString();// make into string
         String replaced = mydicti.replace("{", ""); // replace the curly brackets
@@ -156,14 +159,31 @@ public class Properties_Widget {
 		MyClass.invoke("reset_keywords");
 		System.out.println("keywords reset");
 	}
-	public String set_keywords(String key, String value){	
+	public void set_keywords(String key, String value){	
 		PyObject mykey = new PyString(key);
 		PyObject myvalue = new PyString(value);
 		PyObject[] mylist = new PyObject[]{mykey,myvalue};
 		MyClass.invoke("set_keywords",mylist);
-		System.out.print(MyClass.invoke("get_keywords").toString());
-		return null;
-		
+		System.out.print(MyClass.invoke("get_keywords").toString());		
 	}
-
+	public String get_Name(){
+		return myname;
+	}
+	public void set_filepath(String filepath){
+		PyString options = new PyString(filepath);
+		MyClass.invoke("set_filepath",options);
+	}
+	public void set_title(String name){
+		PyString options = new PyString(name);
+		MyClass.invoke("set_title",options);
+	}
+	
+	public String run(){
+		PyObject output = MyClass.invoke("run");
+		return output.toString();
+	}
+	public String get_runtime_path(){
+		return MyClass.invoke("get_ntreor_path").toString();
+	}
+		
 }
