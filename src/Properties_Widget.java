@@ -27,6 +27,7 @@ public class Properties_Widget {
 	public static PyObject MyClass;
 	public static String myname = "";
 	public static String myfilepath = "";
+	public static boolean Selected = false;
 	
 	public Table create(CTabFolder indexfolder, String filepath, String classname, String options){
 		
@@ -184,6 +185,12 @@ public class Properties_Widget {
 	}
 	public String get_runtime_path(){
 		return MyClass.invoke("get_ntreor_path").toString();
+	}
+	public static boolean get_selected(){
+		return Selected;
+	}
+	public static void set_Selected(boolean select){
+		Selected = select;
 	}
 		
 }

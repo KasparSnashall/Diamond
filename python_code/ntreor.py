@@ -1,4 +1,5 @@
 from subprocess import Popen,PIPE
+import sys
 import os
 class Ntreor:
     """Class Ntreor
@@ -120,29 +121,18 @@ class Ntreor:
             f.close
 
     def run(self):
-        os.chdir("/scratch/workspace_git/Diamond/python_code")
-        proc = Popen('/scratch/workspace_git/Diamond/python_code/ntreor',stdin=PIPE,stdout=PIPE) # calls ntreor needs full path usually
-        print self.filepath
-        proc.stdin.write('N\n') # first line is always N
-        proc.stdin.write(self.filepath+self.title+'.dat\n') # name of input file
-        proc.stdin.write(self.filepath+self.title+'.imp\n') # output file
-        proc.stdin.write(self.filepath+self.title+'.con\n')# condensed output file
-        proc.stdin.write(self.filepath+self.title+'.short\n')# short output file
-        proc.stdin.write('0\n') # theta shift
-        proc.stdin.write('N\n') # asks to stop after one? always N
-        
-       
-        for file in os.listdir(os.getcwd()):
-            if "fort" in file:
-                    print file
-                    with open(file) as f:
-                        lines = f.readlines()
-                        for line in lines:
-                            print line
-                        f.close()
-                    os.remove(file)
-                    raise ValueError
-        return "Complete"
+        proc = Popen('python_code/ntreor',stdin=PIPE,stdout=PIPE) # calls ntreor needs full path usually
+        if "." in self.title:
+            self.title = self.title.split(".")[0]
+            print self.title
+        filer = self.filepath+self.title
+        commands = "N\n"+ filer+".dat"+"\n"+filer+".imp"+"\n"+filer+".con"+"\n"+filer+".short"+"\n"+"0\nN\n" # command string
+        output = proc.communicate(commands)[0]
+        proc.wait()
+        if proc.returncode != 0:
+            return "file may not have run properly"
+        else:
+            return output
         
      
     def _keylist_(self):

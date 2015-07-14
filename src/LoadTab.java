@@ -145,7 +145,7 @@ public class LoadTab{
 					data.toString(); // always returns pyobject so can be written to string
 					textboxtext.append(sampletext.getText()+"\n"); // get the name of the data print to textbox
 					textboxtext.append(data+"\n"); // print the data
-					new IndexTab().setMydata(data);
+					new IndexTab().setMydata(myfilepath);
 					
 					
 					}catch(Exception z){

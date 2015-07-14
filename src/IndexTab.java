@@ -1,4 +1,6 @@
 import java.io.File;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -6,9 +8,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import junit.framework.Test;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabItem;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Color;
@@ -58,9 +64,11 @@ public class IndexTab {
         Button peaksButton = new Button(composite, SWT.RADIO);
         peaksButton.setText("From file");
         
+        
         Text filepathbox =  new Text(composite,SWT.BORDER);
         griddata = new GridData(150,20); 
         filepathbox.setLayoutData(griddata);
+        
         
         
         
@@ -76,8 +84,17 @@ public class IndexTab {
 				filepathbox.setEnabled(false);
 		        browse.setEnabled(false);
 		        textbox.setEnabled(true);
+		        filepath = LoadTab.get_filepath();
+		        
 				}
 			
+		});
+        
+        filepathbox.addModifyListener(new ModifyListener() {
+			@Override
+		public void modifyText(ModifyEvent me) {
+				filepath = filepathbox.getText();
+			}
 		});
         
         peaksButton.addSelectionListener(new SelectionAdapter() {
@@ -114,12 +131,15 @@ public class IndexTab {
         
         Table indexingprogs = new Table(composite,SWT.CHECK | SWT.SCROLL_LINE);
         griddata = new GridData(SWT.FILL,SWT.FILL,false, true, 1, 2);
+        griddata.minimumHeight = 200;
         indexingprogs.setLayoutData(griddata);
         new TableColumn(indexingprogs,SWT.NULL).setText("Programs");
         indexingprogs.getColumn(0).pack();
         indexingprogs.setHeaderVisible(true); // make sure headers are seen
         
         String[] myprogslist = new String[]{"Ntreor","McMy"};
+        
+        
         for (int loopIndex = 0; loopIndex < myprogslist.length; loopIndex++) {
   	      TableItem item = new TableItem(indexingprogs, SWT.NULL);
   	      item.setText(0,myprogslist[loopIndex]);}
@@ -158,7 +178,7 @@ public class IndexTab {
         griddata.horizontalAlignment = SWT.RIGHT;
         run.setLayoutData(griddata);
         
-        Text output = new Text(composite,SWT.BORDER | SWT.MULTI | SWT.WRAP);
+        Text output = new Text(composite,SWT.BORDER | SWT.MULTI | SWT.WRAP |SWT.V_SCROLL);
         griddata = new GridData(SWT.FILL,SWT.FILL,false, true, 1, 3);
         griddata.minimumHeight = 200;
         griddata.horizontalSpan = 3;
@@ -174,6 +194,7 @@ public class IndexTab {
         
         addvariable.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent event) {
+				
 				for (int loopIndex = 0; loopIndex < widgets_list.size(); loopIndex++){
 					Properties_Widget myprog = widgets_list.get(loopIndex);
 					Table mytable = table_list.get(loopIndex);
@@ -207,6 +228,7 @@ public class IndexTab {
         
         Reset.addSelectionListener(new SelectionAdapter(){
         	public void widgetSelected(SelectionEvent event) {
+        		System.out.println(filepath);
         		for (int loopIndex = 0; loopIndex < widgets_list.size(); loopIndex++){
 					Properties_Widget myprog = widgets_list.get(loopIndex);
 					Table mytable = table_list.get(loopIndex);
@@ -216,6 +238,8 @@ public class IndexTab {
 				  	      myitem.setText(3,"");
 				  	      myitem.setChecked(false);
 				  	      myitem.setBackground(grey);
+				  	      output.setText("");
+				  	      
 					}
 					
 					}
@@ -224,18 +248,43 @@ public class IndexTab {
         
         run.addSelectionListener(new SelectionAdapter(){
         	public void widgetSelected(SelectionEvent event) {
+        		if (filepath == null){
+        			output.append("no file slected \n");
+        		}
+        		else{
+        			
+        			try{
+        		for(int loopIndex = 0; loopIndex < widgets_list.size(); loopIndex++){
+        		Properties_Widget myprog = widgets_list.get(loopIndex);	
         		
-        		Path base = Paths.get(Ntreor.get_runtime_path());
-        		Path myfilepath = Paths.get("/scratch/runfiles");
+        		
+        		
+        		File myfile = new File(filepath);
+        		String mynewfilepath  = myfile.getParent().toString();
+        		String mybase = "/scratch/workspace_git/Diamond";
+        		Path base = Paths.get(mybase); // path of current module will make this atuomatic
+        		Path myfilepath = Paths.get(mynewfilepath); // path of runfile
+        		System.out.println(base);
+        		System.out.println(myfilepath);
+        		
+        		
         		Path relativepath = base.relativize(myfilepath);
-
-        		System.out.println(relativepath);
+        		
+        		System.out.print(relativepath.toString());
         		Ntreor.set_filepath(relativepath.toString()+"/");
-        		Ntreor.set_title("ntreor_test");
+        		
+        		Ntreor.set_title(myfile.getName());
         		String newoutput = Ntreor.run();
         		output.append(newoutput);
-        	}
-        } );
+        		}}
+        		catch(Exception e){
+        			System.out.println(e.getMessage());
+        			
+        		}
+        		}
+        		
+        		}
+        	});
         return composite;
         }
 	
@@ -243,10 +292,9 @@ public class IndexTab {
 	return mydata;
 	}
 	
-	public void setMydata(PyObject loadeddata) {
-		mydata = loadeddata.toString();
-		data = loadeddata;
-		textbox.setText(mydata);
+	public void setMydata(String myfilepath) {
+		
+		textbox.setText(myfilepath);
 	}
 
 }
