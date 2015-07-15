@@ -54,9 +54,6 @@ class Ntreor:
     def set_title(self,title):
         self.title= title
         
-    def get_ntreor_path(self):
-        return "/scratch/workspace_git/Diamond/python_code"
-        
     def read_output(self):
         """function to read a .imp ouputfile of the ntreor program takes a filepath (string) to the .imp file"""
         with open(self.filepath+self.title+'.imp','r') as f:
