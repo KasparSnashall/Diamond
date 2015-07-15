@@ -68,7 +68,7 @@ public class Properties_Widget {
             //System.out.print(keyValue[0]+keyValue[1]); // print values 
         }
         
-        String[] titles = {"Enable","Variable","Standard Value","New Value"};
+        String[] titles = {"Enable","Variable","Value","New Value"};
         
     	for (int loopIndex = 0; loopIndex < titles.length; loopIndex++) {
     	      TableColumn column = new TableColumn(table, SWT.NULL);
