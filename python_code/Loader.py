@@ -82,7 +82,7 @@ class Loader:
         # loads a hkl file colnum  is 3,4 for d_space,intensity respectively
         d1 =  dnp.io.load(self.data,format='text')
         d1 = d1[0] # get the data array from dnp array
-        d1 = d1[:,4] # return the 4th column intensity
+        d1 = d1[:,3] # return the 4th column intensity
         d1 = d1[1:] # skip the header, del or pop is not allowed
         d1 = [float(i) for i in d1] # make floats
         if self.myrange == True:
