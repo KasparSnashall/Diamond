@@ -142,10 +142,16 @@ public class LoadTab{
 					String opts = finalfilepath+","+myrangestring+","+top+","+bottom; // collect the options
 					PyInstance Loader = ie.createClass("Loader",opts);// invoke my class as a pyobject
 					data = Loader.invoke("load"); // calls the run function
-					data.toString(); // always returns pyobject so can be written to string
+					String datastring = data.toString(); // always returns pyobject so can be written to string
 					textboxtext.append(sampletext.getText()+"\n"); // get the name of the data print to textbox
-					textboxtext.append(data+"\n"); // print the data
+					textboxtext.append(datastring+"\n"); // print the data
+					
+					// normally this will send to the peaks tab
 					new IndexTab().setMytitle(sampletext.getText());
+					new IndexTab().setMydata(data);
+					new IndexTab().setMyfilepath(filepath);
+					System.out.println(filepath);
+					System.out.println(data);
 					
 					
 					
@@ -161,15 +167,5 @@ public class LoadTab{
         composite.pack();
         return composite;
 		}
-	
-	public static PyObject data_getter(){ 
-		// getter for the data
-		return data;
-		
-	}
-	public static String get_filepath(){
-		return filepath;
-		
-	}
 	
 	}
