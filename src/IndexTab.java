@@ -1,15 +1,8 @@
 import java.io.File;
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
-import junit.framework.Test;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabItem;
@@ -22,7 +15,6 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Label;
@@ -40,45 +32,49 @@ public class IndexTab {
 	public static String mydata = ""; // loaded data string
 	public static Text textbox; // loaded_data output
 	public static PyObject data; // data to be used
-	public static String filepath = LoadTab.get_filepath(); // get the current filepath
+	public static String filepath = LoadTab.get_filepath(); // get the current filepath (if loaded data this will be the loaded path)
 	
 	public Composite create(CTabFolder folder,Shell shell,Display display){// composite allows me to use more then one item in my tab folder
+		// new master composite
         Composite composite = new Composite(folder, SWT.LEFT);
-        composite.setLayout(new GridLayout(3, false)); // three columns
-        griddata = new GridData(SWT.FILL, SWT.FILL, true, false); 
-        griddata.horizontalSpan = 3;
+        composite.setLayout(new GridLayout(3, false)); // three columns composite
+       
+        // the index view
         Label Indexview  = new Label(composite,SWT.NONE);
         Indexview.setText("Index View");
+        griddata = new GridData(SWT.FILL, SWT.FILL, true, false); 
+        griddata.horizontalSpan = 3; // 3 columns wide 
         Indexview.setLayoutData(griddata);
         
+        // the load radio button
         Button loadButton = new Button(composite, SWT.RADIO);
         loadButton.setText("Loaded data");
         loadButton.setSelection(true);
         
+        // the load data textbox
         textbox = new Text(composite,SWT.BORDER);
         textbox.setText(mydata);
         griddata = new GridData(150,20); 
         griddata.horizontalSpan = 2;
         textbox.setLayoutData(griddata);
         
+        // from file radio button
         Button peaksButton = new Button(composite, SWT.RADIO);
         peaksButton.setText("From file");
         
-        
+        // text box for the filepath
         Text filepathbox =  new Text(composite,SWT.BORDER);
         griddata = new GridData(150,20); 
         filepathbox.setLayoutData(griddata);
         
-        
-        
-        
+        // browse button
         Button browse = new Button(composite, SWT.PUSH);
         browse.setAlignment(SWT.LEFT);
         browse.setText("Browse");
         filepathbox.setEnabled(false);
         browse.setEnabled(false);
     
-        
+        // load button function
         loadButton.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent event) {
 				filepathbox.setEnabled(false);
@@ -90,6 +86,7 @@ public class IndexTab {
 			
 		});
         
+        // filepathbox function (changes String filepath to selected)
         filepathbox.addModifyListener(new ModifyListener() {
 			@Override
 		public void modifyText(ModifyEvent me) {
@@ -97,6 +94,7 @@ public class IndexTab {
 			}
 		});
         
+        // peaks button function changes the filepath to the loaded data's filepath
         peaksButton.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent event) {
 				filepathbox.setEnabled(true);
@@ -105,6 +103,9 @@ public class IndexTab {
 				}
 			
 		});
+        
+        // browse selection function
+        
         browse.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent event) {
 				String filepath = new FileDialog(shell).open();
@@ -112,7 +113,7 @@ public class IndexTab {
 						// if a filepath is input
 			          File file = new File(filepath);
 			          if (file.isFile()){
-			        	  // check is actually a file and not just directory
+			        	  // check is actually a file and not just directory or stub
 			        	  filepathbox.setText(filepath);
 			        	  }
 			          else
@@ -122,14 +123,14 @@ public class IndexTab {
 		});
        
         
-        
+        // properties widget tabs
         CTabFolder indexfolder = new CTabFolder(composite, SWT.TOP); // create a tab set
         griddata = new GridData(SWT.FILL,SWT.FILL,false, true, 2, 2);
-        //griddata.horizontalSpan = 2;
         griddata.grabExcessHorizontalSpace = true;
         indexfolder.setLayoutData(griddata);
         
-        Table indexingprogs = new Table(composite,SWT.CHECK | SWT.SCROLL_LINE);
+        // indeing programs list
+        Table indexingprogs = new Table(composite,SWT.CHECK | SWT.SCROLL_LINE); // list of programs
         griddata = new GridData(SWT.FILL,SWT.FILL,false, true, 1, 2);
         griddata.minimumHeight = 200;
         indexingprogs.setLayoutData(griddata);
@@ -137,47 +138,56 @@ public class IndexTab {
         indexingprogs.getColumn(0).pack();
         indexingprogs.setHeaderVisible(true); // make sure headers are seen
         
-        String[] myprogslist = new String[]{"Ntreor","McMy"};
-        
-        
+        // list of programs available
+        String[] myprogslist = new String[]{"Ntreor","McMaille"};
+        // add the list to the programs table
         for (int loopIndex = 0; loopIndex < myprogslist.length; loopIndex++) {
   	      TableItem item = new TableItem(indexingprogs, SWT.NULL);
   	      item.setText(0,myprogslist[loopIndex]);}
         
         
-
+        // add variable button
         Button addvariable = new Button(composite,SWT.NONE);
         addvariable.setText("Add variables");
+        
+        // reset button
         Button Reset = new Button(composite,SWT.NONE);
         Reset.setText("Reset");
         
+        // Add the ntreor tab, at time of writing this is the only one available
         CTabItem cTabItem1 = new CTabItem(indexfolder, SWT.NONE);
         cTabItem1.setText("Ntreor");
+        // get the properties widget
         Properties_Widget Ntreor = new Properties_Widget();
-        Table Ntreor_table = Ntreor.create(indexfolder, "python_code/ntreor.py", "Ntreor", "");
+        Table Ntreor_table = Ntreor.create(indexfolder, "python_code/ntreor.py", "Ntreor", ""); // file, class name, options
         cTabItem1.setControl(Ntreor_table);
         
+        // add in second tab currently a stub
+        CTabItem cTabItem2 = new CTabItem(indexfolder, SWT.BORDER);
+        cTabItem2.setText("McMaille");
         
-        
+        // make a list of the current properties widgets
         List<Properties_Widget> widgets_list = new ArrayList<Properties_Widget>();
         widgets_list.add(Ntreor);
+        // make a list of the properties widgets tables
         List<Table> table_list = new ArrayList<Table>();
         table_list.add(Ntreor_table);
         
         
-        
+        // colours used in the properties widget
 		Color grey = display.getSystemColor(SWT.COLOR_GRAY);
 		Color white = display.getSystemColor(SWT.COLOR_WHITE);
 		Color green = display.getSystemColor(SWT.COLOR_GREEN);
 		Color red = display.getSystemColor(SWT.COLOR_RED);
 		
+		// run button
         Button run = new Button(composite, SWT.NONE);
         run.setText("Run");
         griddata = new GridData();
-
-        griddata.horizontalAlignment = SWT.RIGHT;
+        griddata.horizontalAlignment = SWT.RIGHT; // align the button right
         run.setLayoutData(griddata);
         
+        // output textbox
         Text output = new Text(composite,SWT.BORDER | SWT.MULTI | SWT.WRAP |SWT.V_SCROLL);
         griddata = new GridData(SWT.FILL,SWT.FILL,false, true, 1, 3);
         griddata.minimumHeight = 200;
@@ -185,36 +195,34 @@ public class IndexTab {
         output.setLayoutData(griddata);
         
         
-        
-        CTabItem cTabItem2 = new CTabItem(indexfolder, SWT.BORDER);
-        cTabItem2.setText("McMy");
-        
-        
-        
-        
+        // add variable button function
         addvariable.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent event) {
 				
 				for (int loopIndex = 0; loopIndex < widgets_list.size(); loopIndex++){
-					Properties_Widget myprog = widgets_list.get(loopIndex);
-					Table mytable = table_list.get(loopIndex);
-					System.out.print(myprog.get_Name());
-				
+					// go through the list of programs,tables and programs list (check boxes)
+					Properties_Widget myprog = widgets_list.get(loopIndex); // get the program
+					Table mytable = table_list.get(loopIndex); // get the table
+					TableItem ischecked = indexingprogs.getItem(loopIndex); // make sure the program is selected
+					
+					if (ischecked.getChecked() == true){ // is it checked?
 				try{
+					
 				for (int loopIndex1 = 0; loopIndex1 < mytable.getItems().length; loopIndex1++) {
+						  // go through table get checked values
 				  	      TableItem myitem = mytable.getItem(loopIndex1);
-				  	    
 				  	      if (myitem.getChecked() == true){
 				  	      String value = myitem.getText(3);
 				  	      String key = myitem.getText(1);
 				  	      
-				  	      if (value == ""){
+				  	      if (value == ""){ // make sure value is not null
 				  	    	output.append("Value for" + key + " Not defined\n");
-				  	    	myitem.setBackground(red);}
+				  	    	myitem.setBackground(red); // make background red if it is
+				  	    	}
 				  	      else {
-				  	    	myitem.setBackground(green);
-				  	    	myprog.set_keywords(key, value);
-				  	    	output.append(key + " " + value+"\n");
+				  	    	myitem.setBackground(green); // make green
+				  	    	myprog.set_keywords(key, value); // use the program to set keywords
+				  	    	output.append(key + " " + value+"\n"); // print the values added
 				  	    	
 				  	      }
 					  	  }}}
@@ -222,23 +230,23 @@ public class IndexTab {
 			
 			}
 				}
+			}
 		});
         
         
-        
+        // reset button function
         Reset.addSelectionListener(new SelectionAdapter(){
         	public void widgetSelected(SelectionEvent event) {
-        		System.out.println(filepath);
         		for (int loopIndex = 0; loopIndex < widgets_list.size(); loopIndex++){
 					Properties_Widget myprog = widgets_list.get(loopIndex);
 					Table mytable = table_list.get(loopIndex);
-					System.out.print(myprog.get_Name());
+					
 					for (int loopIndex1 = 0; loopIndex1 < mytable.getItems().length; loopIndex1++) {
-				  	      TableItem myitem = mytable.getItem(loopIndex1);
+				  	      TableItem myitem = mytable.getItem(loopIndex1); // go through each table and set the item text to ""
 				  	      myitem.setText(3,"");
-				  	      myitem.setChecked(false);
-				  	      myitem.setBackground(grey);
-				  	      output.setText("");
+				  	      myitem.setChecked(false); // unckeck the boxes
+				  	      myitem.setBackground(grey); // clear the background
+				  	      output.setText(""); // reset the output
 				  	      
 					}
 					
@@ -246,54 +254,57 @@ public class IndexTab {
         	}
         });
         
+        // run button function
         run.addSelectionListener(new SelectionAdapter(){
         	public void widgetSelected(SelectionEvent event) {
         		if (filepath == null){
-        			output.append("no file slected \n");
+        			output.append("no file slected \n"); // file or data must be selected
         		}
         		else{
         			
         			try{
         		for(int loopIndex = 0; loopIndex < widgets_list.size(); loopIndex++){
-        		Properties_Widget myprog = widgets_list.get(loopIndex);	
+        		Properties_Widget myprog = widgets_list.get(loopIndex); // get the program
+        		TableItem myitem = indexingprogs.getItem(loopIndex); // get checked?
         		
         		
-        		
-        		File myfile = new File(filepath);
-        		String mynewfilepath  = myfile.getParent().toString();
-        		String mybase = "/scratch/workspace_git/Diamond";
-        		Path base = Paths.get(mybase); // path of current module will make this atuomatic
-        		Path myfilepath = Paths.get(mynewfilepath); // path of runfile
-        		System.out.println(base);
-        		System.out.println(myfilepath);
+        		if (myitem.getChecked() == true){
         		
         		
-        		Path relativepath = base.relativize(myfilepath);
+        		output.append(myprog.get_Name()+" Running \n"); // running...
+        		File myfile = new File(filepath); // check if file
+        		String mynewfilepath  = myfile.getParent().toString(); // get the parent directory
+        		String mybase = "/scratch/workspace_git/Diamond"; // current base directory
+        		Path base = Paths.get(mybase); // current module path will make this automatic
+        		Path myfilepath = Paths.get(mynewfilepath); 
+
+        		Path relativepath = base.relativize(myfilepath); // relative path of runfile (Ntreor requires this)
+        		System.out.print(relativepath.toString()); // dev check
         		
-        		System.out.print(relativepath.toString());
-        		Ntreor.set_filepath(relativepath.toString()+"/");
+        		myprog.set_filepath(relativepath.toString()+"/"); // pass the relative filepath to the prog
+        		myprog.set_title(myfile.getName()); // set the filename (file.end , handled in the python script ) 
+        		String newoutput = myprog.run(); // the output
+        		output.append(newoutput); // print the output
         		
-        		Ntreor.set_title(myfile.getName());
-        		String newoutput = Ntreor.run();
-        		output.append(newoutput);
-        		}}
+        		
+        		}}}
         		catch(Exception e){
-        			System.out.println(e.getMessage());
+        			output.append(e.getMessage());
         			
         		}
         		}
-        		
         		}
         	});
         return composite;
         }
 	
 	public String getMydata(){
+		// return the data to other progs
 	return mydata;
 	}
 	
 	public void setMydata(String myfilepath) {
-		
+		// loaded tab sends the filepath
 		textbox.setText(myfilepath);
 	}
 
