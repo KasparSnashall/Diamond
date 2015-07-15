@@ -240,7 +240,7 @@ public class IndexTab {
         		for (int loopIndex = 0; loopIndex < widgets_list.size(); loopIndex++){
 					Properties_Widget myprog = widgets_list.get(loopIndex);
 					Table mytable = table_list.get(loopIndex);
-					
+					myprog.reset_keywords(); // reset the keywords in the program
 					for (int loopIndex1 = 0; loopIndex1 < mytable.getItems().length; loopIndex1++) {
 				  	      TableItem myitem = mytable.getItem(loopIndex1); // go through each table and set the item text to ""
 				  	      myitem.setText(3,"");
