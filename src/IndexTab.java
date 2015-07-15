@@ -74,35 +74,7 @@ public class IndexTab {
         filepathbox.setEnabled(false);
         browse.setEnabled(false);
     
-        // load button function
-        loadButton.addSelectionListener(new SelectionAdapter() {
-			public void widgetSelected(SelectionEvent event) {
-				filepathbox.setEnabled(false);
-		        browse.setEnabled(false);
-		        textbox.setEnabled(true);
-		        filepath = LoadTab.get_filepath();
-		        
-				}
-			
-		});
-        
-        // filepathbox function (changes String filepath to selected)
-        filepathbox.addModifyListener(new ModifyListener() {
-			@Override
-		public void modifyText(ModifyEvent me) {
-				filepath = filepathbox.getText();
-			}
-		});
-        
-        // peaks button function changes the filepath to the loaded data's filepath
-        peaksButton.addSelectionListener(new SelectionAdapter() {
-			public void widgetSelected(SelectionEvent event) {
-				filepathbox.setEnabled(true);
-		        browse.setEnabled(true);
-		        textbox.setEnabled(false);
-				}
-			
-		});
+
         
         // browse selection function
         
@@ -198,7 +170,9 @@ public class IndexTab {
         // add variable button function
         addvariable.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent event) {
-				
+				if (indexfolder.getEnabled() == false){
+					output.append("Prebuilt files may not have variables added \n");
+				}
 				for (int loopIndex = 0; loopIndex < widgets_list.size(); loopIndex++){
 					// go through the list of programs,tables and programs list (check boxes)
 					Properties_Widget myprog = widgets_list.get(loopIndex); // get the program
@@ -295,6 +269,39 @@ public class IndexTab {
         		}
         		}
         	});
+        
+        // load button function
+        loadButton.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent event) {
+				filepathbox.setEnabled(false);
+		        browse.setEnabled(false);
+		        textbox.setEnabled(true);
+		        filepath = LoadTab.get_filepath();
+		        indexfolder.setEnabled(true);
+		        indexfolder.setVisible(true);
+		        
+				}
+			
+		});
+        
+        // filepathbox function (changes String filepath to selected)
+        filepathbox.addModifyListener(new ModifyListener() {
+			@Override
+		public void modifyText(ModifyEvent me) {
+				filepath = filepathbox.getText();
+			}
+		});
+        
+        // peaks button function changes the filepath to the loaded data's filepath
+        peaksButton.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent event) {
+				filepathbox.setEnabled(true);
+		        browse.setEnabled(true);
+		        textbox.setEnabled(false);
+		        indexfolder.setEnabled(false);
+				}
+			
+		});
         return composite;
         }
 	
