@@ -30,12 +30,15 @@ public class Properties_Widget {
 	
 	public Table create(CTabFolder indexfolder, String filepath, String classname, String options){
 		
+		// get the current display and create colours
 		Display display = Display.getCurrent();
 		Color grey = display.getSystemColor(SWT.COLOR_GRAY);
+		Color white = display.getSystemColor(SWT.COLOR_WHITE); 
+		// set the global variables
 		myname = classname;
 		myfilepath = filepath;
 		
-		
+		// create the table for the program
 		Table table = new Table(indexfolder, SWT.CHECK | SWT.MULTI | SWT.V_SCROLL); // table to be returned
 		table.setHeaderVisible(true); // make sure headers are seen
 		table.setToolTipText("Options for the data");
@@ -44,54 +47,57 @@ public class Properties_Widget {
 		griddata.horizontalSpan = 2;
 		table.setLayoutData(griddata);
 		
+		// create interpreter
 		interpreter ie = new interpreter(); // call my interpreter
 		ie.execfile(myfilepath); // my file
 		MyClass = ie.createClass(myname,options);// invoke my class as a pyobject
+		
 		
 		PyObject mydict = MyClass.invoke("get_standard_dict"); // calls the run function
         String mydicti = mydict.toString();// make into string
         String replaced = mydicti.replace("{", ""); // replace the curly brackets
         String replaced2 = replaced.replace("}", ""); // replace the second curly bracket
-        String replaced3 = replaced2.replaceAll("'", "");
-        String[] pairs = replaced3.split(","); // split to list
+        String replaced3 = replaced2.replaceAll("'", ""); //replace the "'"
+        String[] pairs = replaced3.split(","); // split to list of key value pairs
         
-        Map<String, String> NtreorDict = new HashMap<String, String>();
+        
+       // create a list of keys and values
         ArrayList<String>variables = new ArrayList<String>();
         ArrayList<String>values = new ArrayList<String>();
+        
         for (int i=0;i<pairs.length;i++) {
             String pair = pairs[i];
             String[] keyValue = pair.split(":");
-            NtreorDict.put(keyValue[0], keyValue[1]); // map dict
-            variables.add(keyValue[0]);
+            variables.add(keyValue[0]); // append lists with values and keys
             values.add(keyValue[1]);
-            //System.out.print(keyValue[0]+keyValue[1]); // print values 
         }
         
+        // list of column titles
         String[] titles = {"Enable","Variable","Value","New Value"};
-        
+        // set column titles
     	for (int loopIndex = 0; loopIndex < titles.length; loopIndex++) {
     	      TableColumn column = new TableColumn(table, SWT.NULL);
     	      column.setText(titles[loopIndex]);
     	      column.setWidth(100);
     	    }
-    	
+    	// create the table with 4 columns and set the items
     	for (int loopIndex = 0; loopIndex < variables.size(); loopIndex++) {
     	      final TableItem item = new TableItem(table, SWT.NULL);
-    	      item.setBackground(grey);
-    	      item.setText(1,variables.get(loopIndex));
-    	      item.setText(2,values.get(loopIndex));
-    	      item.setText(3, "");
+    	      item.setBackground(grey); // background colour
+    	      item.setText(1,variables.get(loopIndex)); // the key
+    	      item.setText(2,values.get(loopIndex)); // the value
+    	      item.setText(3, ""); // blank column for new value
     	      
     	}
-    	
+    	// create a table editor
     	final TableEditor editor = new TableEditor(table);
     	//The editor must have the same size as the cell and must
     	//not be any smaller than 50 pixels.
-    	editor.horizontalAlignment = SWT.LEFT;
+    	editor.horizontalAlignment = SWT.LEFT; // alignment
     	editor.grabHorizontal = true;
     	editor.minimumWidth = 50;
     	
-    	
+    	// table editor function
     	table.addSelectionListener(new SelectionAdapter() {
     		@Override
     		public void widgetSelected(SelectionEvent e) {
@@ -105,20 +111,21 @@ public class Properties_Widget {
     	
     			// The control that will be the editor must be a child of the Table
     			Text newEditor = new Text(table, SWT.BORDER);
-    			newEditor.setText(item.getText(3));
+    			newEditor.setText(item.getText(3)); // get the current text
     			newEditor.addModifyListener(new ModifyListener() {
     				@Override
-    			public void modifyText(ModifyEvent me) {
-    					Text text = (Text)editor.getEditor();
+    			public void modifyText(ModifyEvent me) { // if a change is detected set the text
+    					Text text = (Text)editor.getEditor(); 
     					editor.getItem().setText(3, text.getText());
     				}
     			});
-    			newEditor.selectAll();
+    			newEditor.selectAll(); // sets its for all table items
     			newEditor.setFocus();
     			editor.setEditor(newEditor, item, 3);
     		}
     	});
-    	Color white = display.getSystemColor(SWT.COLOR_WHITE);
+    	
+    	// table checklist function
     	table.addSelectionListener(new SelectionAdapter(){
     		
     		public void widgetSelected(SelectionEvent event){
@@ -128,7 +135,7 @@ public class Properties_Widget {
                     //Now what should I do here to get Whether it is a checked event or Unchecked event.
     				if (item.getChecked() == true){
   			  	      
-  				  	  item.setBackground(white);
+  				  	  item.setBackground(white); // set background colour
   			  	      }
   			  	      else{
   			  	    	  item.setBackground(grey);
@@ -140,50 +147,47 @@ public class Properties_Widget {
     	});
 
     	
-    	
+    	// pack the table
     	for (int loopIndex = 0; loopIndex < titles.length; loopIndex++) {
     	      table.getColumn(loopIndex).pack();
     	    }
     	
-    	
-    	System.out.println(table.getListeners(0));
-        
-    
-   
-	
-    
+    // return the table
 	return table;  
 	}
 	
 	public void reset_keywords(){
+		// use the class to reset keywords
 		MyClass.invoke("reset_keywords");
 		System.out.println("keywords reset");
 	}
 	public void set_keywords(String key, String value){	
+		// set keywords function, must be pystrings
 		PyObject mykey = new PyString(key);
 		PyObject myvalue = new PyString(value);
 		PyObject[] mylist = new PyObject[]{mykey,myvalue};
-		MyClass.invoke("set_keywords",mylist);
-		System.out.print(MyClass.invoke("get_keywords").toString());		
+		MyClass.invoke("set_keywords",mylist); // run the set function		
 	}
 	public String get_Name(){
+		// get the title
 		return myname;
 	}
 	public void set_filepath(String filepath){
+		// set filepath function
 		PyString options = new PyString(filepath);
 		MyClass.invoke("set_filepath",options);
 	}
 	public void set_title(String name){
+		// set title function
 		PyString options = new PyString(name);
 		MyClass.invoke("set_title",options);
 	}
 	
 	public String run(){
+		// run function
 		PyObject output = MyClass.invoke("run");
 		return output.toString();
 	}
-	public String get_runtime_path(){
-		return MyClass.invoke("get_ntreor_path").toString();
-	}
+
 		
 }
