@@ -24,10 +24,9 @@ import org.python.core.PyString;
 
 public class Properties_Widget {
 	
-	public static PyObject MyClass;
-	public static String myname = "";
-	public static String myfilepath = "";
-	public static boolean Selected = false;
+	public static PyObject MyClass; // the python class
+	public static String myname = ""; // the title
+	public static String myfilepath = ""; // the filepath to be used
 	
 	public Table create(CTabFolder indexfolder, String filepath, String classname, String options){
 		
@@ -185,12 +184,6 @@ public class Properties_Widget {
 	}
 	public String get_runtime_path(){
 		return MyClass.invoke("get_ntreor_path").toString();
-	}
-	public static boolean get_selected(){
-		return Selected;
-	}
-	public static void set_Selected(boolean select){
-		Selected = select;
 	}
 		
 }
