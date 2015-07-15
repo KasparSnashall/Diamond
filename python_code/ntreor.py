@@ -123,7 +123,7 @@ class Ntreor:
     def run(self):
         proc = Popen('python_code/ntreor',stdin=PIPE,stdout=PIPE) # calls ntreor needs full path usually
         if "." in self.title:
-            self.title = self.title.split(".")[0]
+            self.title = self.title.split(".")[0] # just gets the file name
             print self.title
         filer = self.filepath+self.title
         commands = "N\n"+ filer+".dat"+"\n"+filer+".imp"+"\n"+filer+".con"+"\n"+filer+".short"+"\n"+"0\nN\n" # command string
