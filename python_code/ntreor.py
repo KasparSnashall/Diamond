@@ -104,8 +104,13 @@ class Ntreor:
         return value_list,errors_list
 
     def write_input(self):
-        """function to9 write a .dat input file for the ntreor programme uses filepath as an argument"""
+        """function to write a .dat input file for the ntreor programme uses filepath as an argument"""
         data1 = self.data[0:20] # select first 20 elements only, I must test this!
+        
+        if "." in self.title:
+            self.title = self.title.split(".")[0]
+            print self.title
+        
         with open(self.filepath + self.title +'.dat','w') as f:
             f.write(self.title +'\n') # set title
             for i in data1:
@@ -116,17 +121,23 @@ class Ntreor:
             f.write('END*'+'\n') # add end statement
             f.write('0.00') # required for some code if not needed ignored
             f.close
-
+            
+        
+        
     def run(self):
         proc = Popen('python_code/ntreor',stdin=PIPE,stdout=PIPE) # calls ntreor needs full path usually
         if "." in self.title:
             self.title = self.title.split(".")[0] # just gets the file name
-            print self.title
+
         filer = self.filepath+self.title
+        
+        if len(self.data) < 20:
+            return "Value error not enough values for ntreor test"
+        
         commands = "N\n"+ filer+".dat"+"\n"+filer+".imp"+"\n"+filer+".con"+"\n"+filer+".short"+"\n"+"0\nN\n" # command string
         output = proc.communicate(commands)[0]
         proc.wait()
-        if proc.returncode != 0:
+        if proc.returncode == None:
             return "file may not have run properly"
         else:
             return output

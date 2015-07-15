@@ -155,7 +155,10 @@ public class Properties_Widget {
     // return the table
 	return table;  
 	}
-	
+	public void write_dat(PyObject data){
+		MyClass.invoke("set_data", data);
+		MyClass.invoke("write_input");
+	}
 	public void reset_keywords(){
 		// use the class to reset keywords
 		MyClass.invoke("reset_keywords");
