@@ -29,10 +29,10 @@ import org.python.core.PyObject;
 public class IndexTab {
 	
 	GridData griddata;
-	public static String mydata = ""; // loaded data string
 	public static Text textbox; // loaded_data output
 	public static PyObject data; // data to be used
 	public static String filepath = LoadTab.get_filepath(); // get the current filepath (if loaded data this will be the loaded path)
+	public static String title = "";
 	
 	public Composite create(CTabFolder folder,Shell shell,Display display){// composite allows me to use more then one item in my tab folder
 		// new master composite
@@ -53,7 +53,7 @@ public class IndexTab {
         
         // the load data textbox
         textbox = new Text(composite,SWT.BORDER);
-        textbox.setText(mydata);
+        textbox.setText(title);
         griddata = new GridData(150,20); 
         griddata.horizontalSpan = 2;
         textbox.setLayoutData(griddata);
@@ -231,12 +231,47 @@ public class IndexTab {
         // run button function
         run.addSelectionListener(new SelectionAdapter(){
         	public void widgetSelected(SelectionEvent event) {
-        		if (filepath == null){
-        			output.append("no file slected \n"); // file or data must be selected
-        		}
-        		else{
+        		if (loadButton.getSelection() == true){
         			
         			try{
+        				
+                		for(int loopIndex = 0; loopIndex < widgets_list.size(); loopIndex++){
+                		Properties_Widget myprog = widgets_list.get(loopIndex); // get the program
+                		TableItem myitem = indexingprogs.getItem(loopIndex); // get checked?
+                		
+                		
+                		if (myitem.getChecked() == true){
+                		
+                		
+                		output.append(myprog.get_Name()+" Running \n"); // running...
+                		File myfile = new File(filepath); // check if file
+                		String mynewfilepath  = myfile.getParent().toString(); // get the parent directory
+                		String mybase = "/scratch/workspace_git/Diamond"; // current base directory
+                		Path base = Paths.get(mybase); // current module path will make this automatic
+                		Path myfilepath = Paths.get(mynewfilepath); 
+
+                		Path relativepath = base.relativize(myfilepath); // relative path of runfile (Ntreor requires this)
+                		System.out.print(relativepath.toString()); // dev check
+                		
+                		myprog.set_filepath(relativepath.toString()+"/"); // pass the relative filepath to the prog
+                		myprog.set_title(myfile.getName()); // set the filename (file.end , handled in the python script ) 
+                		String newoutput = myprog.run(); // the output
+                		output.append(newoutput); // print the output
+                		
+                		
+                		}}}
+                		catch(Exception e){
+                			output.append(e.getMessage());
+                			
+                		}	
+        			
+        		}
+        		if(peaksButton.getSelection() == true){
+        			if (filepath == null){
+        				output.append("No input file selected");	
+        			}
+        			else{
+        		try{
         		for(int loopIndex = 0; loopIndex < widgets_list.size(); loopIndex++){
         		Properties_Widget myprog = widgets_list.get(loopIndex); // get the program
         		TableItem myitem = indexingprogs.getItem(loopIndex); // get checked?
@@ -265,6 +300,7 @@ public class IndexTab {
         		catch(Exception e){
         			output.append(e.getMessage());
         			
+        		}
         		}
         		}
         		}
@@ -305,14 +341,18 @@ public class IndexTab {
         return composite;
         }
 	
-	public String getMydata(){
+	public PyObject getMydata(){
 		// return the data to other progs
-	return mydata;
+	return data;
+	}
+	public void setMydata(PyObject mydata){
+		// retrive loaded data
+		data = mydata;	
 	}
 	
-	public void setMydata(String myfilepath) {
+	public void setMytitle(String mytitle) {
 		// loaded tab sends the filepath
-		textbox.setText(myfilepath);
+		textbox.setText(mytitle); 
 	}
 
 }
