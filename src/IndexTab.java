@@ -31,7 +31,7 @@ public class IndexTab {
 	GridData griddata;
 	public static Text textbox; // loaded_data output
 	public static PyObject data; // data to be used
-	public static String filepath = LoadTab.get_filepath(); // get the current filepath (if loaded data this will be the loaded path)
+	public static String filepath = ""; // filepath (if loaded data this will be the loaded path)
 	public static String title = "";
 	
 	public Composite create(CTabFolder folder,Shell shell,Display display){// composite allows me to use more then one item in my tab folder
@@ -60,7 +60,7 @@ public class IndexTab {
         
         // from file radio button
         Button peaksButton = new Button(composite, SWT.RADIO);
-        peaksButton.setText("From file");
+        peaksButton.setText("Existing .dat");
         
         // text box for the filepath
         Text filepathbox =  new Text(composite,SWT.BORDER);
@@ -173,6 +173,7 @@ public class IndexTab {
 				if (indexfolder.getEnabled() == false){
 					output.append("Prebuilt files may not have variables added \n");
 				}
+				else{
 				for (int loopIndex = 0; loopIndex < widgets_list.size(); loopIndex++){
 					// go through the list of programs,tables and programs list (check boxes)
 					Properties_Widget myprog = widgets_list.get(loopIndex); // get the program
@@ -203,7 +204,8 @@ public class IndexTab {
 				catch (Exception e) {System.out.print(e);}
 			
 			}
-				}
+			}
+			}
 			}
 		});
         
@@ -244,24 +246,27 @@ public class IndexTab {
                 		
                 		
                 		output.append(myprog.get_Name()+" Running \n"); // running...
+                		
                 		File myfile = new File(filepath); // check if file
                 		String mynewfilepath  = myfile.getParent().toString(); // get the parent directory
                 		String mybase = "/scratch/workspace_git/Diamond"; // current base directory
                 		Path base = Paths.get(mybase); // current module path will make this automatic
                 		Path myfilepath = Paths.get(mynewfilepath); 
-
                 		Path relativepath = base.relativize(myfilepath); // relative path of runfile (Ntreor requires this)
-                		System.out.print(relativepath.toString()); // dev check
                 		
-                		myprog.set_filepath(relativepath.toString()+"/"); // pass the relative filepath to the prog
-                		myprog.set_title(myfile.getName()); // set the filename (file.end , handled in the python script ) 
+                		
+                	
+                		myprog.set_title(title); // set the filename (file.end , handled in the python script )  
+                		myprog.set_filepath(relativepath.toString()+"/");
+                		myprog.write_dat(data);
+                		
                 		String newoutput = myprog.run(); // the output
                 		output.append(newoutput); // print the output
                 		
                 		
                 		}}}
                 		catch(Exception e){
-                			output.append(e.getMessage());
+                			output.append(" ");
                 			
                 		}	
         			
@@ -272,13 +277,14 @@ public class IndexTab {
         			}
         			else{
         		try{
+        		boolean runflag = false; 
         		for(int loopIndex = 0; loopIndex < widgets_list.size(); loopIndex++){
         		Properties_Widget myprog = widgets_list.get(loopIndex); // get the program
         		TableItem myitem = indexingprogs.getItem(loopIndex); // get checked?
         		
         		
         		if (myitem.getChecked() == true){
-        		
+        		runflag = true;
         		
         		output.append(myprog.get_Name()+" Running \n"); // running...
         		File myfile = new File(filepath); // check if file
@@ -292,11 +298,16 @@ public class IndexTab {
         		
         		myprog.set_filepath(relativepath.toString()+"/"); // pass the relative filepath to the prog
         		myprog.set_title(myfile.getName()); // set the filename (file.end , handled in the python script ) 
+        		
         		String newoutput = myprog.run(); // the output
         		output.append(newoutput); // print the output
-        		
-        		
-        		}}}
+        		}
+        		}
+        		if (runflag == false){
+        			output.append("No program selected \n");
+        			
+        		}
+        		}
         		catch(Exception e){
         			output.append(e.getMessage());
         			
@@ -312,7 +323,6 @@ public class IndexTab {
 				filepathbox.setEnabled(false);
 		        browse.setEnabled(false);
 		        textbox.setEnabled(true);
-		        filepath = LoadTab.get_filepath();
 		        indexfolder.setEnabled(true);
 		        indexfolder.setVisible(true);
 		        
@@ -349,10 +359,14 @@ public class IndexTab {
 		// retrive loaded data
 		data = mydata;	
 	}
+	public void setMyfilepath(String myfilepath){
+		filepath = myfilepath;
+	}
 	
 	public void setMytitle(String mytitle) {
 		// loaded tab sends the filepath
-		textbox.setText(mytitle); 
+		textbox.setText(mytitle);
+		title = mytitle;
 	}
 
 }
